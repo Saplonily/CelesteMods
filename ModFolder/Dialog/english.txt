@@ -1,0 +1,5 @@
+ChineseNewYear2024Helper_OPTIMIZE2_IHPHKDIALOGENTITY_EXAMPLE_NAME= optimize_2
+ChineseNewYear2024Helper_OPTIMIZE2_IHPHKDIALOGENTITY_EXAMPLE_DIALOG= aaaaa,
+bbbbb,
+ccccc,
+ddddd.

@@ -1,0 +1,8 @@
+- Name: CNY2024Helper
+  Version: 0.1.0
+  DLL: CNY2024Helper.dll
+  Dependencies:
+    - Name: Everest
+      Version: 1.3971.0
+    - Name: PandorasBox 
+      Version: 1.0.47
