@@ -1,5 +1,5 @@
 - Name: CNY2024Helper
-  Version: 0.1.0
+  Version: 0.1.1
   DLL: CNY2024Helper.dll
   Dependencies:
     - Name: Everest
