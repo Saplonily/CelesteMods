@@ -11,8 +11,7 @@ public class TwirlBackdrop : Backdrop
     private MTexture[] twirlTextures;
     private Vector2[] twirlPositions;
     private float[] twirlSpeeds;
-    private Color[] twirlColors;
-    private Tween tween;
+    private Entity entityAttached;
 
     public TwirlBackdrop(BinaryPacker.Element data)
     {
@@ -50,23 +49,16 @@ public class TwirlBackdrop : Backdrop
             twirlSpeeds[i] = v;
         }
 
-        twirlColors = new Color[15];
-        for (int i = 0; i < 15; i++)
-            twirlColors[i] = Color.White;
+        entityAttached = new Entity();
     }
 
     public override void Update(Scene scene)
     {
         base.Update(scene);
-        tween?.Update();
-        if (scene.OnInterval(3f))
+        if (!ReferenceEquals(entityAttached.Scene, scene))
         {
-            tween = Tween.Create(Tween.TweenMode.YoyoOneshot, Ease.CubeOut, 0.5f, true);
-            tween.OnUpdate = t =>
-            {
-                //for (int i = 0; i < 15; i++)
-                //    twirlColors[i] = Color.Lerp(Color.White, Color.Transparent, t.Eased);
-            };
+            entityAttached.RemoveSelf();
+            scene.Add(entityAttached);
         }
     }
 
@@ -76,11 +68,7 @@ public class TwirlBackdrop : Backdrop
         int length = twirlTextures.Length;
         for (int i = 0; i < length; i++)
         {
-
-            twirlTextures[i].DrawCentered(twirlPositions[i], MulColor(Color, twirlColors[i]), 1f, scene.TimeActive * twirlSpeeds[i] * speed);
+            twirlTextures[i].DrawCentered(twirlPositions[i], Color, 1f, scene.TimeActive * twirlSpeeds[i] * speed);
         }
     }
-
-    private Color MulColor(Color a, Color b)
-        => new Color(a.ToVector4() * b.ToVector4());
 }
