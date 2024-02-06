@@ -14,8 +14,10 @@ public static class VivCassetteTileEntityFix
 
     public static void Load()
     {
-        if (!CNY2024HelperModule.Settings.VivCassetteTileEntityFix)
-            return;
+        if (vivOnLoadEntityILHook is not null) return;
+        if (CNY2024HelperModule.Instance is not null)
+            if (!CNY2024HelperModule.Settings.VivCassetteTileEntityFix)
+                return;
         try
         {
             Type type = typeof(VivHelperModule);
@@ -52,5 +54,6 @@ public static class VivCassetteTileEntityFix
     public static void Unload()
     {
         vivOnLoadEntityILHook?.Dispose();
+        vivOnLoadEntityILHook = null;
     }
 }
