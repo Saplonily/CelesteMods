@@ -2,7 +2,7 @@
 using Celeste.Mod.Backdrops;
 using static Celeste.TrackSpinner;
 
-namespace Celeste.Mod.CNY2024Helper;
+namespace Celeste.Mod.CNY2024Helper.Backdrops;
 
 [CustomBackdrop("CNY2024Helper/TwirlBackdrop")]
 public class TwirlBackdrop : Backdrop
