@@ -11,12 +11,14 @@ public class HeartsideInhaleTrigger : Trigger
     private float strength;
     private string flag;
     private float radius;
+    private float k;
 
     public HeartsideInhaleTrigger(EntityData data, Vector2 offset)
         : base(data, offset)
     {
-        strength = 400f;
+        strength = data.Float("strength", 400f);
         minimumDis = data.Float("minimumdis", 10f);
+        k = data.Float("k", 10f);
         target = data.NodesOffset(offset)[0];
         flag = data.Attr("flag");
     }
@@ -44,7 +46,6 @@ public class HeartsideInhaleTrigger : Trigger
 
     public IEnumerator Inhale(Player player)
     {
-        float k = 10f;
         Vector2 Tengency = CalcTangentLine(target, player.Position, (float)(radius * (0.4)));
         player.Speed = Vector2.Normalize(target - player.Position) * k;
         int colddown = 30;
@@ -62,6 +63,12 @@ public class HeartsideInhaleTrigger : Trigger
                 NextPos.X += (float)(t1 - t2);
                 NextPos.Y += (float)((player.Y - target.Y) * Math.Cos(angle) + (player.X - target.X) * Math.Sin(angle));
                 Vector2 Speed = Vector2.Normalize(NextPos - player.Position);
+                float XxX = Vector2.Dot(player.Speed, Speed);
+                if (XxX < 0) 
+                {
+                    angleK = -angleK;
+                    continue;
+                }
                 player.Speed = Speed * k;
                 //angleK += 0.1f;
             }
