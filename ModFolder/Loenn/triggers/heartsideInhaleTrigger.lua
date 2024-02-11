@@ -5,6 +5,7 @@ trigger.nodeLimits = {1, 1}
 trigger.placements = {
     name = "normal",
     data = {
+        dir = 1,
         strength = 400.0,
         minimumdis = 10,
         k = 10,
