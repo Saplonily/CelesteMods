@@ -12,10 +12,12 @@ public class HeartsideInhaleTrigger : Trigger
     private string flag;
     private float radius;
     private float k;
+    private int dir;
 
     public HeartsideInhaleTrigger(EntityData data, Vector2 offset)
         : base(data, offset)
     {
+        dir = data.Int("dir", 1);
         strength = data.Float("strength", 400f);
         minimumDis = data.Float("minimumdis", 10f);
         k = data.Float("k", 10f);
@@ -50,6 +52,7 @@ public class HeartsideInhaleTrigger : Trigger
         player.Speed = Vector2.Normalize(target - player.Position) * k;
         int colddown = 30;
         float angleK = -16;
+        angleK *= dir;
         float angle;
         while (radius > minimumDis)
         {
@@ -63,12 +66,6 @@ public class HeartsideInhaleTrigger : Trigger
                 NextPos.X += (float)(t1 - t2);
                 NextPos.Y += (float)((player.Y - target.Y) * Math.Cos(angle) + (player.X - target.X) * Math.Sin(angle));
                 Vector2 Speed = Vector2.Normalize(NextPos - player.Position);
-                float XxX = Vector2.Dot(player.Speed, Speed);
-                if (XxX < 0) 
-                {
-                    angleK = -angleK;
-                    continue;
-                }
                 player.Speed = Speed * k;
                 //angleK += 0.1f;
             }
