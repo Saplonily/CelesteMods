@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Sprites>
+  <cny2024_GDDNblackhole path="decals/ChineseNewYear2024/StarSapphire/GDDNblackhole/" start="idle">
+    <Center/>
+    <Loop id="idle" path="asmallblackholecanrotitself" delay="0.1"/>
+  </cny2024_GDDNblackhole>
+</Sprites>

@@ -1,5 +1,5 @@
 - Name: CNY2024Helper
-  Version: 0.1.4
+  Version: 0.1.6
   DLL: CNY2024Helper.dll
   Dependencies:
     - Name: Everest
@@ -8,3 +8,5 @@
       Version: 1.0.47
     - Name: VivHelper
       Version: 1.14.2
+    - Name: SaladimHelper
+      Version: 0.2.2
