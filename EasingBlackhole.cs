@@ -11,6 +11,7 @@ public sealed class EasingBlackhole : Entity
     private readonly float rotationSpeedB;
     private readonly float scaleA;
     private readonly float scaleB;
+    private readonly string flag;
     private readonly Sprite sprite;
     private bool triggered;
 
@@ -19,7 +20,7 @@ public sealed class EasingBlackhole : Entity
               data.Position + offset, new(data.Width, data.Height),
               data.Float("duration", 1f), data.Float("delay", 0f),
               data.Float("rotationSpeedA", 1f), data.Float("rotationSpeedB", 2f),
-              data.Float("scaleA", 1f), data.Float("scaleB", 2f)
+              data.Float("scaleA", 1f), data.Float("scaleB", 2f), data.Attr("flag", "")
               )
     {
 
@@ -29,7 +30,7 @@ public sealed class EasingBlackhole : Entity
         Vector2 position, Vector2 size,
         float duration, float delay,
         float rotationSpeedA, float rotationSpeedB,
-        float scaleA, float scaleB
+        float scaleA, float scaleB, string flag
         )
         : base(position)
     {
@@ -39,6 +40,7 @@ public sealed class EasingBlackhole : Entity
         this.rotationSpeedB = rotationSpeedB;
         this.scaleA = scaleA;
         this.scaleB = scaleB;
+        this.flag = flag;
         sprite = GFX.SpriteBank.Create("cny2024_GDDNblackhole");
         Collider = new Hitbox(size.X, size.Y);
         Add(sprite);
@@ -48,21 +50,23 @@ public sealed class EasingBlackhole : Entity
         sprite.Scale = new(scaleA);
         sprite.Rate = rotationSpeedA;
         sprite.Play("idle");
-        Add(new PlayerCollider(OnCollidePlayer));
     }
 
-    private void OnCollidePlayer(Player player)
+    public override void Update()
     {
-        if (triggered) return;
-        triggered = true;
-        Alarm.Set(this, delay, () =>
+        base.Update();
+        if (!triggered && SceneAs<Level>().Session.GetFlag(flag))
         {
-            Tween.Set(this, Tween.TweenMode.Oneshot, duration, Ease.SineOut, t =>
+            triggered = true;
+            Alarm.Set(this, delay, () =>
             {
-                sprite.Scale = new(Calc.LerpClamp(scaleA, scaleB, t.Eased));
-                sprite.Color.A = (byte)(255f * t.Eased);
-                sprite.Rate = Calc.LerpClamp(rotationSpeedA, rotationSpeedB, t.Eased);
+                Tween.Set(this, Tween.TweenMode.Oneshot, duration, Ease.SineOut, t =>
+                {
+                    sprite.Scale = new(Calc.LerpClamp(scaleA, scaleB, t.Eased));
+                    sprite.Color.A = (byte)(255f * t.Eased);
+                    sprite.Rate = Calc.LerpClamp(rotationSpeedA, rotationSpeedB, t.Eased);
+                });
             });
-        });
+        }
     }
 }

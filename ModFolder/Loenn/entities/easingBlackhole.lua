@@ -12,7 +12,8 @@ entity.placements =
         rotationSpeedA = 1.0,
         rotationSpeedB = 1.0,
         scaleA = 1.0,
-        scaleB = 2.0
+        scaleB = 2.0,
+        flag = ""
     }
 }
 entity.texture = "decals/ChineseNewYear2024/StarSapphire/GDDNblackhole/asmallblackholecanrotitself00"
