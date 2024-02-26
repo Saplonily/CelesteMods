@@ -23,14 +23,7 @@ public static class DrivableCarLightModule
     public static void DrivableCar_Added_hook(DrivableCar_Added_orig orig, DrivableCar self, Scene scene)
     {
         orig(self, scene);
-        if (scene is Level
-            {
-                Session.MapData.Data.SID:
-#if DEBUG
-            "Saplonily/TestMap" or
-#endif
-            "ChineseNewYear2024/1-Maps/ZZ-HeartSide"
-            })
+        if (scene is Level { Session.MapData.Data.SID: "ChineseNewYear2024/1-Maps/ZZ-HeartSide" })
         {
             DynamicData dd = DynamicData.For(self);
 
@@ -64,14 +57,11 @@ public static class DrivableCarLightModule
     public static void DrivableCar_Update_hook(DrivableCar_Update_orig orig, DrivableCar self)
     {
         orig(self);
-        if (self.SceneAs<Level>() is
-            {
-                Session.MapData.Data.SID:
-#if DEBUG
-            "Saplonily/TestMap" or
-#endif
-            "ChineseNewYear2024/1-Maps/ZZ-HeartSide"
-            })
+        var sid = self.SceneAs<Level>().Session.MapData.Data.SID;
+        bool dxMap = sid is "ChineseNewYear2024/1-Maps/DX3906I";
+        bool hsMap = sid is "ChineseNewYear2024/1-Maps/ZZ-HeartSide";
+
+        if (hsMap)
         {
             DynamicData dd = DynamicData.For(self);
             int facing = (int)dd.Get("facing");
@@ -89,6 +79,18 @@ public static class DrivableCarLightModule
                     gcs[i].Active = gcs[i].Visible = false;
                 for (int i = 5; i < 10; i++)
                     gcs[i].Active = gcs[i].Visible = true;
+            }
+        }
+
+        if (hsMap || dxMap)
+        {
+            DynamicData dd = DynamicData.For(self);
+            Image body = dd.Get<Image>("bodySprite");
+            Image wheel = dd.Get<Image>("wheelsSprite");
+            if (body.Scale.X == 0 || wheel.Scale.X == 0)
+            {
+                body.Scale.X = 1;
+                wheel.Scale.X = 1;
             }
         }
     }
