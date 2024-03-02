@@ -1,6 +1,6 @@
 - Name: BetterFreezeFrames
-  Version: 0.2.0
+  Version: 0.2.1
   DLL: BetterFreezeFrames.dll
   Dependencies:
-    - Name: Everest
-      Version: 1.3971.0
+    - Name: EverestCore
+      Version: 1.4465.0

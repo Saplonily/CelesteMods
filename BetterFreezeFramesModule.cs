@@ -1,4 +1,5 @@
 using System.Reflection;
+using Mono.Cecil.Cil;
 
 namespace Celeste.Mod.BetterFreezeFrames;
 
@@ -10,9 +11,19 @@ public class BetterFreezeFramesModule : EverestModule
     public static BetterFreezeFramesSettings Settings => (BetterFreezeFramesSettings)Instance._Settings;
 
     public static bool FreezeUpdating;
+
     public readonly static FieldInfo FreezeUpdatingField =
         typeof(BetterFreezeFramesModule).GetField(nameof(FreezeUpdating));
+
+    // TimeActive doesn't update while freezing
+    public static float ExtraTimeActive;
+
+    public readonly static FieldInfo ExtraTimeActiveField =
+        typeof(BetterFreezeFramesModule).GetField(nameof(ExtraTimeActive));
+
+    // TODO: a better way to control this (currently these hooks is actually done in the setters of property of ModuleSettings
     public static bool LoadedStuffs = false;
+
 
     public BetterFreezeFramesModule()
     {
@@ -26,10 +37,13 @@ public class BetterFreezeFramesModule : EverestModule
 #if DEBUG
         On.Celeste.Level.Update += Level_Update;
 #endif
+        IL.Monocle.Engine.ctor += Engine_ctor;
         IL.Monocle.Engine.Update += Engine_Update;
         On.Celeste.ScreenWipe.Update += ScreenWipe_Update;
         On.Celeste.DreamBlock.Update += DreamBlock_Update;
         On.Celeste.TriggerSpikes.Update += TriggerSpikes_Update;
+        IL.Celeste.LightningRenderer.Update += ILHookReplaceOnInterval;
+        IL.Celeste.SeekerBarrierRenderer.Update += ILHookReplaceOnInterval;
         LoadedStuffs = true;
     }
 
@@ -39,12 +53,36 @@ public class BetterFreezeFramesModule : EverestModule
 #if DEBUG
         On.Celeste.Level.Update -= Level_Update;
 #endif
+        IL.Monocle.Engine.ctor -= Engine_ctor;
         IL.Monocle.Engine.Update -= Engine_Update;
         On.Celeste.ScreenWipe.Update -= ScreenWipe_Update;
         On.Celeste.DreamBlock.Update -= DreamBlock_Update;
         On.Celeste.TriggerSpikes.Update -= TriggerSpikes_Update;
+        IL.Celeste.LightningRenderer.Update -= ILHookReplaceOnInterval;
+        IL.Celeste.SeekerBarrierRenderer.Update -= ILHookReplaceOnInterval;
         LoadedStuffs = false;
     }
+
+    private void Engine_ctor(ILContext il)
+    {
+        ILCursor cur = new(il);
+        cur.EmitLdcR4(0f);
+        cur.EmitStsfld(ExtraTimeActiveField);
+    }
+
+    private void ILHookReplaceOnInterval(ILContext il)
+    {
+        ILCursor cur = new(il);
+        while (cur.TryGotoNext(ins => ins.MatchCallvirt<Scene>("OnInterval")))
+        {
+            var ins = cur.Instrs[cur.Index];
+            ins.OpCode = OpCodes.Call;
+            ins.Operand = typeof(BetterFreezeFramesModule).GetMethod(nameof(OnExtraInterval));
+        }
+    }
+
+    #region extra patch
+
 
     private void TriggerSpikes_Update(On.Celeste.TriggerSpikes.orig_Update orig, TriggerSpikes self)
     {
@@ -65,7 +103,8 @@ public class BetterFreezeFramesModule : EverestModule
     {
         if (scene is Level)
         {
-            if (!FreezeUpdating) orig(self, scene);
+            if (!FreezeUpdating)
+                orig(self, scene);
         }
         else
         {
@@ -95,14 +134,17 @@ public class BetterFreezeFramesModule : EverestModule
         }
     }
 
+    #endregion
+
 #if DEBUG
     private void Level_Update(On.Celeste.Level.orig_Update orig, Level self)
     {
-        orig(self);
         if (Input.MenuJournal.Check)
         {
-            Celeste.Freeze(0.5f);
+            Celeste.Freeze(0.1f);
+            return;
         }
+        orig(self);
     }
 #endif
 
@@ -111,6 +153,16 @@ public class BetterFreezeFramesModule : EverestModule
         ILCursor cur = new(il);
         if (cur.TryGotoNext(MoveType.After, ins => ins.MatchStsfld("Monocle.Engine", "FreezeTimer")))
         {
+            // ExtraTimeActive += Engine.DeltaTime;
+            cur.EmitCall(typeof(Engine).GetProperty(nameof(Engine.DeltaTime)).GetGetMethod());
+            cur.EmitLdsfld(ExtraTimeActiveField);
+            cur.EmitAdd();
+            cur.EmitStsfld(ExtraTimeActiveField);
+
+            // FreezeUpdating = true;
+            // self.scene.RendererList.Update();
+            // FreezeUpdate(self.scene);
+            // FreezeUpdating = false;
             cur.EmitLdcI4(1);
             cur.EmitStsfld(FreezeUpdatingField);
             cur.EmitLdarg0();
@@ -121,6 +173,15 @@ public class BetterFreezeFramesModule : EverestModule
             cur.EmitDelegate(FreezeUpdate);
             cur.EmitLdcI4(0);
             cur.EmitStsfld(FreezeUpdatingField);
+        }
+        cur.Index = 0;
+        if (cur.TryGotoNext(MoveType.After, ins => ins.MatchCallvirt<Scene>("BeforeUpdate")))
+        {
+            // ExtraTimeActive += Engine.DeltaTime;
+            cur.EmitCall(typeof(Engine).GetProperty(nameof(Engine.DeltaTime)).GetGetMethod());
+            cur.EmitLdsfld(ExtraTimeActiveField);
+            cur.EmitAdd();
+            cur.EmitStsfld(ExtraTimeActiveField);
         }
     }
 
@@ -135,16 +196,17 @@ public class BetterFreezeFramesModule : EverestModule
                 or WallBooster
                 or TrailManager.Snapshot
                 or SeekerBarrier
+                or SeekerBarrierRenderer // with extra patch
                 or DustEdges
                 or TouchSwitch
                 or WaterFall
                 or LightBeam
                 or LightningStrike
-                or LightningRenderer // this is a little buggy
-                or DreamBlock // not completely "safe"
+                or LightningRenderer // with extra patch
+                or DreamBlock // with extra patch
                 or FloatingDebris
                 or Decal
-                or TriggerSpikes // not completely "safe"
+                or TriggerSpikes // with extra patch
             )
             {
                 entity.Update();
@@ -169,4 +231,7 @@ public class BetterFreezeFramesModule : EverestModule
         }
         return;
     }
+
+    public static bool OnExtraInterval(Scene _, float interval)
+        => (int)((ExtraTimeActive - (double)Engine.DeltaTime) / (double)interval) < (int)(ExtraTimeActive / (double)interval);
 }
