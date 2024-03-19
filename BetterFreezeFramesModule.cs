@@ -37,7 +37,7 @@ public class BetterFreezeFramesModule : EverestModule
 #if DEBUG
         On.Celeste.Level.Update += Level_Update;
 #endif
-        IL.Monocle.Engine.ctor += Engine_ctor;
+        IL.Monocle.Scene.Begin += Scene_Begin;
         IL.Monocle.Engine.Update += Engine_Update;
         On.Celeste.ScreenWipe.Update += ScreenWipe_Update;
         On.Celeste.DreamBlock.Update += DreamBlock_Update;
@@ -53,7 +53,7 @@ public class BetterFreezeFramesModule : EverestModule
 #if DEBUG
         On.Celeste.Level.Update -= Level_Update;
 #endif
-        IL.Monocle.Engine.ctor -= Engine_ctor;
+        IL.Monocle.Scene.Begin -= Scene_Begin;
         IL.Monocle.Engine.Update -= Engine_Update;
         On.Celeste.ScreenWipe.Update -= ScreenWipe_Update;
         On.Celeste.DreamBlock.Update -= DreamBlock_Update;
@@ -63,7 +63,7 @@ public class BetterFreezeFramesModule : EverestModule
         LoadedStuffs = false;
     }
 
-    private void Engine_ctor(ILContext il)
+    private void Scene_Begin(ILContext il)
     {
         ILCursor cur = new(il);
         cur.EmitLdcR4(0f);
@@ -203,10 +203,11 @@ public class BetterFreezeFramesModule : EverestModule
                 or LightBeam
                 or LightningStrike
                 or LightningRenderer // with extra patch
-                or DreamBlock // with extra patch
+                or DreamBlock // with extra patch, may be incompatible with helper dreamblocks
                 or FloatingDebris
                 or Decal
                 or TriggerSpikes // with extra patch
+                or Water // may be incompatible with helper dreamblocks
             )
             {
                 entity.Update();
@@ -215,10 +216,6 @@ public class BetterFreezeFramesModule : EverestModule
             // update "maybe safe" entities here
             switch (entity)
             {
-            case Water water:
-                foreach (Water.Surface surface in water.Surfaces)
-                    surface.Update();
-                break;
             case Refill refill:
             {
                 float orig = refill.respawnTimer;
