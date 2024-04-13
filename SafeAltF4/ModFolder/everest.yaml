@@ -1,0 +1,6 @@
+- Name: SafeAltF4
+  Version: 0.1.0
+  DLL: SafeAltF4.dll
+  Dependencies:
+    - Name: Everest
+      Version: 1.4465.0
