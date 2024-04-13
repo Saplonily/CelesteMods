@@ -18,13 +18,9 @@ public sealed class SafeAltF4Module : EverestModule
         try
         {
             var assembly = typeof(Game).Assembly;
-            Console.WriteLine(assembly);
             string fnaVersion = assembly.GetName().Version.ToString();
             if (fnaVersion != "23.3.0.0")
                 throw new Exception($"FNA assembly version not match. 23.3.0.0 expected, got {fnaVersion}.");
-            SDL.SDL_GetVersion(out var ver);
-            if (ver.major != 2 || ver.minor != 28 || ver.patch != 4)
-                throw new Exception($"SDL version not match. 2.28.4 expected, got {ver.major}.{ver.minor}.{ver.patch}.");
 
             var fnaPlatform = assembly.GetType("Microsoft.Xna.Framework.SDL2_FNAPlatform", true);
             var pollEvents = fnaPlatform.GetMethod("PollEvents", BindingFlags.Static | BindingFlags.Public);
