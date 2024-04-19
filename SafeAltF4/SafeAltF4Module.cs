@@ -88,6 +88,7 @@ public sealed class SafeAltF4Module : EverestModule
                 Logger.Log(LogLevel.Error, nameof(SafeAltF4), "Ooops! Save failed. Let's give up this emergency save...");
                 return;
             }
+            Thread.Sleep(1);
         }
         Logger.Log(LogLevel.Info, nameof(SafeAltF4), "Finished emergency saving.");
     }
