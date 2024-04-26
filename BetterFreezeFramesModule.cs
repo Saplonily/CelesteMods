@@ -1,5 +1,8 @@
+using System.Diagnostics;
 using System.Reflection;
 using Mono.Cecil.Cil;
+using MonoMod.RuntimeDetour;
+using MonoMod.Utils;
 
 namespace Celeste.Mod.BetterFreezeFrames;
 
@@ -24,7 +27,6 @@ public class BetterFreezeFramesModule : EverestModule
     // TODO: a better way to control this (currently these hooks is actually done in the setters of property of ModuleSettings
     public static bool LoadedStuffs = false;
 
-
     public BetterFreezeFramesModule()
     {
         Instance = this;
@@ -40,10 +42,11 @@ public class BetterFreezeFramesModule : EverestModule
         IL.Monocle.Scene.Begin += Scene_Begin;
         IL.Monocle.Engine.Update += Engine_Update;
         On.Celeste.ScreenWipe.Update += ScreenWipe_Update;
-        On.Celeste.DreamBlock.Update += DreamBlock_Update;
+        IL.Celeste.DreamBlock.Update += SkipBaseUpdateILHook<Solid>;
         On.Celeste.TriggerSpikes.Update += TriggerSpikes_Update;
         IL.Celeste.LightningRenderer.Update += ILHookReplaceOnInterval;
         IL.Celeste.SeekerBarrierRenderer.Update += ILHookReplaceOnInterval;
+        IL.Celeste.Refill.Update += SkipBaseUpdateILHook<Entity>;
         LoadedStuffs = true;
     }
 
@@ -56,10 +59,11 @@ public class BetterFreezeFramesModule : EverestModule
         IL.Monocle.Scene.Begin -= Scene_Begin;
         IL.Monocle.Engine.Update -= Engine_Update;
         On.Celeste.ScreenWipe.Update -= ScreenWipe_Update;
-        On.Celeste.DreamBlock.Update -= DreamBlock_Update;
+        IL.Celeste.DreamBlock.Update -= SkipBaseUpdateILHook<Solid>;
         On.Celeste.TriggerSpikes.Update -= TriggerSpikes_Update;
         IL.Celeste.LightningRenderer.Update -= ILHookReplaceOnInterval;
         IL.Celeste.SeekerBarrierRenderer.Update -= ILHookReplaceOnInterval;
+        IL.Celeste.Refill.Update -= SkipBaseUpdateILHook<Entity>;
         LoadedStuffs = false;
     }
 
@@ -81,8 +85,16 @@ public class BetterFreezeFramesModule : EverestModule
         }
     }
 
-    #region extra patch
+    private static void SkipBaseUpdateILHook<T>(ILContext il)
+    {
+        ILCursor cur = new(il);
+        cur.GotoNext(MoveType.Before, ins => ins.MatchLdarg0(), ins => ins.MatchCall<T>("Update"));
+        Instruction ins = cur.Instrs[cur.Index + 2];
+        cur.EmitLdsfld(FreezeUpdatingField);
+        cur.EmitBrtrue(ins);
+    }
 
+    #region extra patch
 
     private void TriggerSpikes_Update(On.Celeste.TriggerSpikes.orig_Update orig, TriggerSpikes self)
     {
@@ -112,28 +124,6 @@ public class BetterFreezeFramesModule : EverestModule
         }
     }
 
-    private void DreamBlock_Update(On.Celeste.DreamBlock.orig_Update orig, DreamBlock self)
-    {
-        if (!FreezeUpdating)
-        {
-            orig(self);
-            return;
-        }
-        // TODO: this is silly copying
-        if (self.playerHasDreamDash)
-        {
-            self.animTimer += 6f * Engine.DeltaTime;
-            self.wobbleEase += Engine.DeltaTime * 2f;
-            if (self.wobbleEase > 1f)
-            {
-                self.wobbleEase = 0f;
-                self.wobbleFrom = self.wobbleTo;
-                self.wobbleTo = Calc.Random.NextFloat(MathHelper.TwoPi);
-            }
-            self.SurfaceSoundIndex = 12;
-        }
-    }
-
     #endregion
 
 #if DEBUG
@@ -151,7 +141,7 @@ public class BetterFreezeFramesModule : EverestModule
     private void Engine_Update(ILContext il)
     {
         ILCursor cur = new(il);
-        if (cur.TryGotoNext(MoveType.After, ins => ins.MatchStsfld("Monocle.Engine", "FreezeTimer")))
+        cur.TryGotoNext(MoveType.After, ins => ins.MatchStsfld("Monocle.Engine", "FreezeTimer"));
         {
             // ExtraTimeActive += Engine.DeltaTime;
             cur.EmitCall(typeof(Engine).GetProperty(nameof(Engine.DeltaTime)).GetGetMethod());
@@ -175,7 +165,7 @@ public class BetterFreezeFramesModule : EverestModule
             cur.EmitStsfld(FreezeUpdatingField);
         }
         cur.Index = 0;
-        if (cur.TryGotoNext(MoveType.After, ins => ins.MatchCallvirt<Scene>("BeforeUpdate")))
+        cur.TryGotoNext(MoveType.After, ins => ins.MatchCallvirt<Scene>("BeforeUpdate"));
         {
             // ExtraTimeActive += Engine.DeltaTime;
             cur.EmitCall(typeof(Engine).GetProperty(nameof(Engine.DeltaTime)).GetGetMethod());
@@ -190,8 +180,7 @@ public class BetterFreezeFramesModule : EverestModule
         foreach (var entity in scene)
         {
             // update "safe to update" entities here
-            if (
-            entity is ParticleSystem
+            if (entity is ParticleSystem
                 or SpeedRing
                 or WallBooster
                 or TrailManager.Snapshot
@@ -207,13 +196,12 @@ public class BetterFreezeFramesModule : EverestModule
                 or FloatingDebris
                 or Decal
                 or TriggerSpikes // with extra patch
-                or Water // may be incompatible with helper dreamblocks
+                or Water // may be incompatible with helper water
             )
             {
                 entity.Update();
                 continue;
             }
-            // update "maybe safe" entities here
             switch (entity)
             {
             case Refill refill:

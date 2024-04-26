@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <Import Project="Common.props"/>
-  
+
   <PropertyGroup Condition="'$(CoreOnlyMod)' == 'false'">
     <TargetFramework>net452</TargetFramework>
     <Platforms>x86</Platforms>
@@ -70,10 +70,6 @@
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>$(CelesteAssemblyPath)/Mono.Cecil.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="MonoMod.Patcher">
-      <HintPath>$(CelesteAssemblyPath)/MonoMod.Patcher.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">

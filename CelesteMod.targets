@@ -1,8 +1,10 @@
 <Project>
   <Target Name="PostModBuild" AfterTargets="AfterBuild">
-    <Message Importance="high" Text="Is core version: $(EverestCoreVersion), assembly path: $(CelesteAssemblyPath), root path: $(CelesteRootPath)"/>
+    <Error Condition="$(OS) != 'Windows_NT' And $(OS) != 'Unix'" Code="SMT02"
+			   Text="This target doesn't support non-Windows_NT and non-Unix platforms currently."/>
+    <Message Text="Is core version: $(EverestCoreVersion), assembly path: $(CelesteAssemblyPath), root path: $(CelesteRootPath)"/>
 
-    <!--.dll and .pdb copying-->
+    <!--.dll and .pdb files copying-->
     <Copy SourceFiles="$(OutputPath)/$(AssemblyName).dll;$(OutputPath)/$(AssemblyName).pdb" DestinationFolder="$(ModAssetsFolderName)"/>
 
     <CallTarget Condition="$(ModAssetsCopyType) == 'link'" Targets="CheckAndCreateSymbolicLink"/>
@@ -12,27 +14,27 @@
   <Target Name="CheckAndCreateSymbolicLink">
     <RemoveDir Directories="$(CelesteRootPath)/Mods/$(AssemblyName)_copy" Condition="Exists('$(CelesteRootPath)/Mods/$(AssemblyName)_copy')"/>
     <PropertyGroup Condition="!Exists('$(CelesteRootPath)/Mods/$(AssemblyName)_link')">
-      <ModLinkNotExists>true</ModLinkNotExists>
+      <_ModLinkNotExists>true</_ModLinkNotExists>
     </PropertyGroup>
-    <Message Importance="high" Condition="'$(ModLinkNotExists)' == 'true'" Text="Symbolic link not created, hang on..."/>
+    <Message Condition="'$(_ModLinkNotExists)' == 'true'" Text="Symbolic link not created, creating..."/>
     <!--create symbolic link on windows-->
-    <Exec Condition="'$(ModLinkNotExists)' == 'true' And '$(OS)' == 'Windows_NT'"
+    <Exec Condition="'$(_ModLinkNotExists)' == 'true' And '$(OS)' == 'Windows_NT'"
         Command="mklink /d &quot;$(CelesteRootPath)/Mods/$(AssemblyName)_link&quot; &quot;$(MSBuildProjectDirectory)/$(ModAssetsFolderName)&quot;"/>
     <!--create symbolic link on unix-->
-    <Exec Condition="'$(ModLinkNotExists)' == 'true' And '$(OS)' == 'Unix'"
+    <Exec Condition="'$(_ModLinkNotExists)' == 'true' And '$(OS)' == 'Unix'"
         Command="ln -s &quot;$(MSBuildProjectDirectory)/$(ModAssetsFolderName)&quot; &quot;$(CelesteRootPath)/Mods/$(AssemblyName)_link&quot;"/>
   </Target>
 
   <Target Name="CopyModFolder">
     <ItemGroup>
-      <ModAssetsFolderContents Include="$(ModAssetsFolderName)\**"/>
+      <ModAssetsFolderContents Include="$(ModAssetsFolderName)/**"/>
     </ItemGroup>
     <RemoveDir Directories="$(CelesteRootPath)/Mods/$(AssemblyName)_link" Condition="Exists('$(CelesteRootPath)/Mods/$(AssemblyName)_link')"/>
-    <MakeDir Condition="!Exists('$(CelesteRootPath)\Mods\$(AssemblyName)_copy')" Directories="$(CelesteRootPath)\Mods\$(AssemblyName)_copy"/>
+    <MakeDir Condition="!Exists('$(CelesteRootPath)/Mods/$(AssemblyName)_copy')" Directories="$(CelesteRootPath)/Mods/$(AssemblyName)_copy"/>
     <Copy SourceFiles="@(ModAssetsFolderContents)"
-			  DestinationFolder="$(CelesteRootPath)\Mods\$(AssemblyName)_copy\%(RecursiveDir)"
+			  DestinationFolder="$(CelesteRootPath)/Mods/$(AssemblyName)_copy/%(RecursiveDir)"
 			  SkipUnchangedFiles="true"/>
-    <Message Text="Copied files in '$(ModAssetsFolderName)' to '$(CelesteRootPath)/Mods/$(AssemblyName)_copy'." Importance="high"/>
+    <Message Text="$(AssemblyName) -> $(CelesteRootPath)/Mods/$(AssemblyName)_copy/$(AssemblyName).dll" Importance="high"/>
   </Target>
 
   <Target Name="CheckingCelestePaths" BeforeTargets="PreBuildEvent">
@@ -41,9 +43,9 @@
     <!--Make our ModFolder directory if necessary-->
     <MakeDir Condition="!Exists($(ModAssetsFolderName))" Directories="$(ModAssetsFolderName)"/>
     <!--Core versions assembly checking-->
-    <Error Condition="!Exists('$(CelesteAssemblyPath)/Celeste.exe') And !Exists('$(CelesteAssemblyPath)/Celeste') And '$(EverestCoreVersion)' == 'true'" 
+    <Error Condition="!Exists('$(CelesteAssemblyPath)/Celeste.exe') And !Exists('$(CelesteAssemblyPath)/Celeste') And '$(EverestCoreVersion)' == 'true'"
             Code="SMT01"
-			Text="You have used core versions Everest but without setting up legacyRef. Go to run 'setup legacyRef' in mod settings menu in game."/>
+			Text="You have used core versions Everest but without setting up legacyRef. Go to run 'setup legacyRef' in the mod settings menu in game."/>
   </Target>
 
   <Target Name="CleanRemoteFolder" BeforeTargets="Clean">
