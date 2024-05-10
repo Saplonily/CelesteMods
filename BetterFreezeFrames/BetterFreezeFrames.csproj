@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="CelesteMod.props" />
+
+  <PropertyGroup>
+    <RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
+    <LangVersion>preview</LangVersion>
+    <PathMap>$(MSBuildProjectDirectory)=~/$(MSBuildProjectName)</PathMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.IO" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--don't ask me why amn't i using CelestePublicizer-->
+    <!--i'm always receiving the error that System.Runtime 7.0 is missing-->
+    <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <Publicize Include="Celeste"/>
+  </ItemGroup>
+
+  <Import Project="CelesteMod.targets" />
+</Project>
