@@ -1,0 +1,1 @@
+POSTCARD_SAFEALTF4_FAILEDHOOK={#ff0000}Warning:{#}{n}{#ff1144}SafeAltF4{#} is not compatible with your current celeste environment.{n} Please check your {#44adf7}log.txt{#} for more information.
