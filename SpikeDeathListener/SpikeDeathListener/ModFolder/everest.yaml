@@ -1,0 +1,6 @@
+- Name: SpikeDeathListener
+  Version: 0.1.0
+  DLL: SpikeDeathListener.dll
+  Dependencies:
+    - Name: Everest
+      Version: 1.3971.0

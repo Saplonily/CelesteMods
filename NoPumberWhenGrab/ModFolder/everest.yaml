@@ -1,0 +1,6 @@
+- Name: NoPumberWhenGrab
+  Version: 0.1.0
+  DLL: NoPumberWhenGrab.dll
+  Dependencies:
+    - Name: Everest
+      Version: 1.3971.0

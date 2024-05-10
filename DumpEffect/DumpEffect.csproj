@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="CelesteMod.props" />
+	
+	<PropertyGroup>
+		<RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
+		<LangVersion>preview</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	  <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="System" />
+		<Using Include="System.Collections.Generic" />
+		<Using Include="System.IO" />
+		<Using Include="System.Linq" />
+		<Using Include="System.Threading" />
+		<Using Include="System.Threading.Tasks" />
+	</ItemGroup>
+  
+	<Import Project="CelesteMod.targets" />
+</Project>

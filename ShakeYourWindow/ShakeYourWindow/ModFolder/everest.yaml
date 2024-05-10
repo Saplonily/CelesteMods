@@ -1,0 +1,6 @@
+- Name: ShakeYourWindow
+  Version: 0.1.0
+  DLL: ShakeYourWindow.dll
+  Dependencies:
+    - Name: Everest
+      Version: 1.4465.0
