@@ -1,7 +1,7 @@
 # 杂碎的蔚蓝 mod | Random Celeste Mods
 
 一个个人制作的杂碎的蔚蓝 mod 集, 虽然大多数都是 WIP, 完全不能用或者过时了.  
-This is a list of random Celeste mods made by Saplonily, tought most of them are wip or obsolete.  
+This is a list of random Celeste mods made by Saplonily, though most of them are wip or obsolete.  
 
 ## Mod 状态 | Mod Status
 
