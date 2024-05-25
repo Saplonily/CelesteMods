@@ -1,12 +1,12 @@
-using System.Diagnostics;
 using System.Reflection;
 using Mono.Cecil.Cil;
+using Celeste.Mod;
+using VivHelperEntities = global::VivHelper.Entities;
 using MonoMod.RuntimeDetour;
-using MonoMod.Utils;
 
 namespace Celeste.Mod.BetterFreezeFrames;
 
-public class BetterFreezeFramesModule : EverestModule
+public partial class BetterFreezeFramesModule : EverestModule
 {
     public static BetterFreezeFramesModule Instance { get; private set; }
 
@@ -24,8 +24,13 @@ public class BetterFreezeFramesModule : EverestModule
     public readonly static FieldInfo ExtraTimeActiveField =
         typeof(BetterFreezeFramesModule).GetField(nameof(ExtraTimeActive));
 
-    // TODO: a better way to control this (currently these hooks is actually done in the setters of property of ModuleSettings
-    public static bool LoadedStuffs = false;
+    public static bool FemtoHelperLoaded;
+    public static bool IsaGrabBagLoaded;
+    public static bool VivHelperLoaded;
+    public static bool FlaglinesAndSuchLoaded;
+    public static bool VortexHelperLoaded;
+
+    private static ILHook VortexHelperBarrierILHook;
 
     public BetterFreezeFramesModule()
     {
@@ -34,11 +39,31 @@ public class BetterFreezeFramesModule : EverestModule
 
     public override void Load()
     {
-        if (!Settings.Enabled) return;
-        if (LoadedStuffs) return;
-#if DEBUG
-        On.Celeste.Level.Update += Level_Update;
-#endif
+        if (Settings.DebugEnabled)
+            LoadDebug();
+        if (Settings.Enabled)
+        {
+            LoadMain();
+        }
+        FemtoHelperLoaded = Everest.Loader.TryGetDependency(new() { Name = "FemtoHelper", Version = new(1, 11, 5) }, out _);
+        IsaGrabBagLoaded = Everest.Loader.TryGetDependency(new() { Name = "IsaGrabBag", Version = new(1, 6, 14) }, out _);
+        VivHelperLoaded = Everest.Loader.TryGetDependency(new() { Name = "VivHelper", Version = new(1, 14, 5) }, out _);
+        FlaglinesAndSuchLoaded = Everest.Loader.TryGetDependency(new() { Name = "FlaglinesAndSuch", Version = new(1, 6, 19) }, out _);
+        VortexHelperLoaded = Everest.Loader.TryGetDependency(new() { Name = "VortexHelper", Version = new(1, 2, 14) }, out _);
+    }
+
+    public override void Unload()
+    {
+        if (Settings.DebugEnabled)
+            UnloadDebug();
+        if (Settings.Enabled)
+        {
+            UnloadMain();
+        }
+    }
+
+    public void LoadMain()
+    {
         IL.Monocle.Scene.Begin += Scene_Begin;
         IL.Monocle.Engine.Update += Engine_Update;
         On.Celeste.ScreenWipe.Update += ScreenWipe_Update;
@@ -47,15 +72,12 @@ public class BetterFreezeFramesModule : EverestModule
         IL.Celeste.LightningRenderer.Update += ILHookReplaceOnInterval;
         IL.Celeste.SeekerBarrierRenderer.Update += ILHookReplaceOnInterval;
         IL.Celeste.Refill.Update += SkipBaseUpdateILHook<Entity>;
-        LoadedStuffs = true;
+        if (VortexHelperLoaded)
+            LoadVortexHelper();
     }
 
-    public override void Unload()
+    public void UnloadMain()
     {
-        if (!LoadedStuffs) return;
-#if DEBUG
-        On.Celeste.Level.Update -= Level_Update;
-#endif
         IL.Monocle.Scene.Begin -= Scene_Begin;
         IL.Monocle.Engine.Update -= Engine_Update;
         On.Celeste.ScreenWipe.Update -= ScreenWipe_Update;
@@ -64,17 +86,38 @@ public class BetterFreezeFramesModule : EverestModule
         IL.Celeste.LightningRenderer.Update -= ILHookReplaceOnInterval;
         IL.Celeste.SeekerBarrierRenderer.Update -= ILHookReplaceOnInterval;
         IL.Celeste.Refill.Update -= SkipBaseUpdateILHook<Entity>;
-        LoadedStuffs = false;
+        if (VortexHelperLoaded)
+            UnloadVortexHelper();
     }
 
-    private void Scene_Begin(ILContext il)
+    public void LoadVortexHelper()
+    {
+        VortexHelperBarrierILHook = new ILHook(typeof(VortexHelper.Entities.PufferBarrierRenderer).GetMethod("Update"), ILHookReplaceOnInterval);
+    }
+
+    public void UnloadVortexHelper()
+    {
+        VortexHelperBarrierILHook?.Dispose();
+    }
+
+    public void LoadDebug()
+    {
+        On.Celeste.Level.Update += Level_Update;
+    }
+
+    public void UnloadDebug()
+    {
+        On.Celeste.Level.Update -= Level_Update;
+    }
+
+    private static void Scene_Begin(ILContext il)
     {
         ILCursor cur = new(il);
         cur.EmitLdcR4(0f);
         cur.EmitStsfld(ExtraTimeActiveField);
     }
 
-    private void ILHookReplaceOnInterval(ILContext il)
+    private static void ILHookReplaceOnInterval(ILContext il)
     {
         ILCursor cur = new(il);
         while (cur.TryGotoNext(ins => ins.MatchCallvirt<Scene>("OnInterval")))
@@ -96,7 +139,7 @@ public class BetterFreezeFramesModule : EverestModule
 
     #region extra patch
 
-    private void TriggerSpikes_Update(On.Celeste.TriggerSpikes.orig_Update orig, TriggerSpikes self)
+    private static void TriggerSpikes_Update(On.Celeste.TriggerSpikes.orig_Update orig, TriggerSpikes self)
     {
         if (FreezeUpdating)
         {
@@ -126,19 +169,17 @@ public class BetterFreezeFramesModule : EverestModule
 
     #endregion
 
-#if DEBUG
-    private void Level_Update(On.Celeste.Level.orig_Update orig, Level self)
+    private static void Level_Update(On.Celeste.Level.orig_Update orig, Level self)
     {
         if (Input.MenuJournal.Check)
         {
-            Celeste.Freeze(0.1f);
+            Celeste.Freeze(0.05f);
             return;
         }
         orig(self);
     }
-#endif
 
-    private void Engine_Update(ILContext il)
+    private static void Engine_Update(ILContext il)
     {
         ILCursor cur = new(il);
         cur.TryGotoNext(MoveType.After, ins => ins.MatchStsfld("Monocle.Engine", "FreezeTimer"));
@@ -175,12 +216,18 @@ public class BetterFreezeFramesModule : EverestModule
         }
     }
 
-    private static void FreezeUpdate(Scene scene)
+    private static bool IsSafeToUpdate(Entity entity)
     {
-        foreach (var entity in scene)
-        {
-            // update "safe to update" entities here
-            if (entity is ParticleSystem
+        return CheckVanilla(entity) ||
+            (FemtoHelperLoaded && CheckFemtoHelper(entity)) ||
+            (IsaGrabBagLoaded && CheckIsaGrabBag(entity)) ||
+            (VivHelperLoaded && CheckVivHelper(entity)) ||
+            (FlaglinesAndSuchLoaded && CheckFlaglinesAndSuch(entity)) ||
+            (VortexHelperLoaded && CheckVortexHelper(entity))
+            ;
+
+        static bool CheckVanilla(Entity entity)
+            => entity is ParticleSystem
                 or SpeedRing
                 or WallBooster
                 or TrailManager.Snapshot
@@ -197,7 +244,36 @@ public class BetterFreezeFramesModule : EverestModule
                 or Decal
                 or TriggerSpikes // with extra patch
                 or Water // may be incompatible with helper water
-            )
+                or ForegroundDebris
+                or Clothesline
+                or CliffFlags
+                or BigWaterfall
+                or MoonCreature
+                or Wire
+                ;
+
+        static bool CheckVivHelper(Entity entity)
+            => entity is VivHelperEntities.CustomTorch or VivHelperEntities.CustomTorch2 or VivHelperEntities.AnimatedSpinner;
+
+        static bool CheckFemtoHelper(Entity entity)
+            => entity is FemtoHelper.PseudoPolyhedron or CustomMoonCreature; // wtf it's in global namespace
+
+        static bool CheckIsaGrabBag(Entity entity)
+            => entity is IsaGrabBag.DreamSpinnerRenderer;
+
+        static bool CheckFlaglinesAndSuch(Entity entity)
+            => entity is FlaglinesAndSuch.CustomFlagline;
+
+        static bool CheckVortexHelper(Entity entity)
+            => entity is VortexHelper.Entities.PufferBarrierRenderer or VortexHelper.Entities.PufferBarrier;
+    }
+
+    private static void FreezeUpdate(Scene scene)
+    {
+        foreach (var entity in scene)
+        {
+            // update "safe to update" entities here
+            if (IsSafeToUpdate(entity))
             {
                 entity.Update();
                 continue;
@@ -213,6 +289,11 @@ public class BetterFreezeFramesModule : EverestModule
                 break;
             }
             }
+        }
+        if (scene is Level level)
+        {
+            level.WindSineTimer += Engine.DeltaTime;
+            level.WindSine = (float)(Math.Sin((double)level.WindSineTimer) + 1.0) / 2f;
         }
         return;
     }

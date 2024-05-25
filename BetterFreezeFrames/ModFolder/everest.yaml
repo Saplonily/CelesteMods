@@ -1,6 +1,17 @@
 - Name: BetterFreezeFrames
-  Version: 0.2.3
+  Version: 0.3.0
   DLL: BetterFreezeFrames.dll
   Dependencies:
     - Name: EverestCore
       Version: 1.4465.0
+  OptionalDependencies:
+    - Name: FemtoHelper
+      Version: 1.11.5
+    - Name: IsaGrabBag
+      Version: 1.6.14
+    - Name: VivHelper
+      Version: 1.14.5
+    - Name: FlaglinesAndSuch
+      Version: 1.6.19
+    - Name: VortexHelper
+      Verison: 1.2.14

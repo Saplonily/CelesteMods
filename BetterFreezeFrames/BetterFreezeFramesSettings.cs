@@ -2,18 +2,44 @@
 
 public class BetterFreezeFramesSettings : EverestModuleSettings
 {
-    private bool enabled;
+    public bool Enabled { get; set; } = true;
 
-    public bool Enabled
+    public bool DebugEnabled { get; set; } = false;
+
+    public void CreateEnabledEntry(TextMenu menu, bool inGame)
     {
-        get => enabled;
-        set
+        menu.Add(new TextMenu.OnOff("Enabled", Enabled).Change(v =>
         {
-            enabled = value;
-            if (enabled && !BetterFreezeFramesModule.LoadedStuffs)
-                BetterFreezeFramesModule.Instance.Load();
-            if (!enabled && BetterFreezeFramesModule.LoadedStuffs)
-                BetterFreezeFramesModule.Instance.Unload();
-        }
+            if (v)
+            {
+                BetterFreezeFramesModule.Instance.LoadMain();
+                Enabled = true;
+            }
+            else
+            {
+                BetterFreezeFramesModule.Instance.UnloadMain();
+                Enabled = false;
+            }
+        }));
+    }
+
+    public void CreateDebugEnabledEntry(TextMenu menu, bool inGame)
+    {
+        var onOff = new TextMenu.OnOff("Debug Keybind Enabled", DebugEnabled);
+        onOff.Change(v =>
+        {
+            if (v)
+            {
+                BetterFreezeFramesModule.Instance.LoadDebug();
+                DebugEnabled = true;
+            }
+            else
+            {
+                BetterFreezeFramesModule.Instance.UnloadDebug();
+                DebugEnabled = false;
+            }
+        });
+        menu.Add(onOff);
+        onOff.AddDescription(menu, Dialog.Clean("modoptions_betterfreezeframes_debugenabled"));
     }
 }

@@ -23,7 +23,34 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <Publicize Include="Celeste"/>
+    <Publicize Include="Celeste" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="FemtoHelper">
+      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/FemtoHelper.FemtoHelper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IsaGrabBag">
+      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/IsaGrabBag.IsaMods.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VivHelper">
+      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/VivHelper.VivHelper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="FlaglinesAndSuch">
+      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/FlaglinesAndSuch.FlaglinesAndSuch.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VortexHelper">
+      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/VortexHelper.VortexHelper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ModFolder\Dialog\" />
   </ItemGroup>
 
   <Import Project="CelesteMod.targets" />
