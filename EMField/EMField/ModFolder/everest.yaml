@@ -1,0 +1,6 @@
+- Name: EMField
+  Version: 0.1.0-dev
+  DLL: EMField.dll
+  Dependencies:
+    - Name: EverestCore
+      Version: 1.4465.0

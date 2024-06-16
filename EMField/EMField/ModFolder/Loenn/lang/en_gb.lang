@@ -1,0 +1,5 @@
+entities.EMField/UniformRectangleEField.placements.name.normal=Uniform Rectangle E-Field
+entities.EMField/PointChargeEField.placements.name.normal=Point Charge E-Field
+entities.EMField/IgnoreForceField.placements.name.normal=Ignore Force Field
+
+entities.EMField/UniformRectangleMField.placements.name.normal=Uniform Rectangle M-Field
