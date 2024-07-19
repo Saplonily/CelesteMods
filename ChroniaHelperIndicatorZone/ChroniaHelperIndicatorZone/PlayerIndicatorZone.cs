@@ -76,6 +76,9 @@ public sealed class PlayerIndicatorZone : Entity
                 offsets.Add(new(12f, 6f));
                 colors.Add(data.HexColor("slot3Color", Color.White));
             }
+            config.Icons = icons;
+            config.IconOffsets = offsets;
+            config.IconColors = colors;
             return config;
         }
 
@@ -203,6 +206,13 @@ public sealed class PlayerIndicatorZone : Entity
     {
         base.Removed(scene);
         lastPlayer = null;
+    }
+
+    public override void Awake(Scene scene)
+    {
+        base.Awake(scene);
+        Session session = SceneAs<Level>().Session;
+        Visible = string.IsNullOrEmpty(controlFlag) || session.GetFlag(controlFlag);
     }
 
     public override void Update()
