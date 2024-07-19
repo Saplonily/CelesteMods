@@ -1,0 +1,6 @@
+- Name: ChroniaHelperIndicatorZone
+  Version: 0.1.0
+  DLL: ChroniaHelperIndicatorZone.dll
+  Dependencies:
+    - Name: EverestCore
+      Version: 1.4465.0
