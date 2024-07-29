@@ -1,0 +1,41 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitsHelper", "BitsHelper\BitsHelper.csproj", "{B30FC055-4377-4119-8350-FFE5E621015D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0FD4AACD-2ED3-4D46-AE89-7F53F9A7B21D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B30FC055-4377-4119-8350-FFE5E621015D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B30FC055-4377-4119-8350-FFE5E621015D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B30FC055-4377-4119-8350-FFE5E621015D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B30FC055-4377-4119-8350-FFE5E621015D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {38295EA2-EB7C-4CF9-8080-77034F6FE51F}
+	EndGlobalSection
+EndGlobal
+.ActiveCfg = Debug|Any CPU
+		{870B47E3-EF39-495E-A485-B73F02EDAF64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{870B47E3-EF39-495E-A485-B73F02EDAF64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{870B47E3-EF39-495E-A485-B73F02EDAF64}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {38295EA2-EB7C-4CF9-8080-77034F6FE51F}
+	EndGlobalSection
+EndGlobal

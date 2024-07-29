@@ -1,0 +1,3 @@
+{04db6ba0-8721-47c4-9caf-8605aa52e266} event:/BitsHelper/bubblefx/bubble_appear
+{945a280e-417d-4b19-bb56-d93b732e6559} event:/BitsHelper/bubblefx/bubble_touch
+{506ec3d6-d02c-4e51-baea-7fa90947e0a0} bank:/bubblefx
