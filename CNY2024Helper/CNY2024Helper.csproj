@@ -2,36 +2,16 @@
 	<Import Project="CelesteMod.props" />
 	
 	<PropertyGroup>
+    <CelesteRootPath>C:\Program Files (x86)\Steam\steamapps\common\Celeste</CelesteRootPath>
 		<RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
 		<LangVersion>preview</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>true</ImplicitUsings>
 	</PropertyGroup>
 	
 	<ItemGroup>
-	  <Reference Include="PandorasBox">
-	    <HintPath>$(CelesteRootPath)/Mods/Cache/PandorasBox.PandorasBox.dll</HintPath>
-	  </Reference>
-    <Reference Include="VivHelper">
-      <HintPath>$(CelesteRootPath)/Mods/Cache/VivHelper.VivHelper.dll</HintPath>
-    </Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Using Include="System" />
-		<Using Include="System.Collections.Generic" />
-		<Using Include="System.IO" />
-		<Using Include="System.Linq" />
-		<Using Include="System.Threading" />
-		<Using Include="System.Threading.Tasks" />
-
-    <Reference Include="System.ValueTuple">
-      <HintPath>$(CelesteAssemblyPath)/System.ValueTuple.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="MonoMod">
-      <HintPath>$(CelesteAssemblyPath)/MonoMod.exe</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <CelesteModReference Include="PandorasBox"/>
+    <CelesteModReference Include="VivHelper"/>
 	</ItemGroup>
 
 	<Import Project="CelesteMod.targets" />
