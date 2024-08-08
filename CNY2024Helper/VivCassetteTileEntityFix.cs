@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using VivHelper;
 using VivHelper.Entities;
