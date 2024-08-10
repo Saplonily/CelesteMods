@@ -1,11 +1,14 @@
 <Project>
+
   <Target Name="PostModBuild" AfterTargets="AfterBuild">
-    <Error Condition="$(OS) != 'Windows_NT' And $(OS) != 'Unix'" Code="SMT02"
-			   Text="This target doesn't support non-Windows_NT and non-Unix platforms currently."/>
-    <Message Text="Is core version: $(EverestCoreVersion), assembly path: $(CelesteAssemblyPath), root path: $(CelesteRootPath)"/>
+    <Message Text="Post mod build, root path: $(CelesteRootPath)" Importance="high"/>
+    <Error Condition="'$(ModAssetsFolderName)' == ''" Text="ModAssetsFolderName is not set." Code="SMT04"/>
 
     <!--.dll and .pdb files copying-->
-    <Copy SourceFiles="$(OutputPath)/$(AssemblyName).dll;$(OutputPath)/$(AssemblyName).pdb" DestinationFolder="$(ModAssetsFolderName)"/>
+    <ItemGroup>
+      <_CompileOutput Include="$(OutputPath)/**"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(_CompileOutput)" DestinationFolder="$(ModAssetsFolderName)/Code"/>
 
     <CallTarget Condition="$(ModAssetsCopyType) == 'link'" Targets="CheckAndCreateSymbolicLink"/>
     <CallTarget Condition="$(ModAssetsCopyType) == 'copy'" Targets="CopyModFolder"/>
@@ -27,11 +30,11 @@
 
   <Target Name="CopyModFolder">
     <ItemGroup>
-      <ModAssetsFolderContents Include="$(ModAssetsFolderName)/**"/>
+      <_ModAssetsFolderContents Include="$(ModAssetsFolderName)/**"/>
     </ItemGroup>
     <RemoveDir Directories="$(CelesteRootPath)/Mods/$(AssemblyName)_link" Condition="Exists('$(CelesteRootPath)/Mods/$(AssemblyName)_link')"/>
     <MakeDir Condition="!Exists('$(CelesteRootPath)/Mods/$(AssemblyName)_copy')" Directories="$(CelesteRootPath)/Mods/$(AssemblyName)_copy"/>
-    <Copy SourceFiles="@(ModAssetsFolderContents)"
+    <Copy SourceFiles="@(_ModAssetsFolderContents)"
 			  DestinationFolder="$(CelesteRootPath)/Mods/$(AssemblyName)_copy/%(RecursiveDir)"
 			  SkipUnchangedFiles="true"/>
     <Message Text="$(AssemblyName) -> $(CelesteRootPath)/Mods/$(AssemblyName)_copy/$(AssemblyName).dll" Importance="high"/>
@@ -39,18 +42,25 @@
 
   <Target Name="CheckingCelestePaths" BeforeTargets="PreBuildEvent">
     <Message Text="Checking celeste root path..."/>
-    <Error Condition="!Exists($(CelesteRootPath))" Text="Celeste root path not found!"/>
-    <!--Make our ModFolder directory if necessary-->
-    <MakeDir Condition="!Exists($(ModAssetsFolderName))" Directories="$(ModAssetsFolderName)"/>
-    <!--Core versions assembly checking-->
-    <Error Condition="!Exists('$(CelesteAssemblyPath)/Celeste.exe') And !Exists('$(CelesteAssemblyPath)/Celeste') And '$(EverestCoreVersion)' == 'true'"
-            Code="SMT01"
-			Text="You have used core versions Everest but without setting up legacyRef. Go to run 'setup legacyRef' in the mod settings menu in game."/>
+    <Error Condition="!Exists($(CelesteRootPath))" Text="Celeste not found." Code="SMT01"/>
+    <Error Condition="!Exists('$(CelesteRootPath)/Celeste.Mod.mm.dll')" Text="Everest not installed." Code="SMT02"/>
+    <Error Condition="Exists('$(CelesteRootPath)/Celeste.exe.config')"
+           Code="SMT03" Text="Legacy versions of Everest are not supported. Please update your Everest to 4465+."/>
   </Target>
 
   <Target Name="CleanRemoteFolder" BeforeTargets="Clean">
+    <Error Condition="'$(ModAssetsFolderName)' == ''" Text="ModAssetsFolderName is not set." Code="SMT04"/>
     <RemoveDir Directories="$(CelesteRootPath)/Mods/$(AssemblyName)_link" Condition="Exists('$(CelesteRootPath)/Mods/$(AssemblyName)_link')"/>
     <RemoveDir Directories="$(CelesteRootPath)/Mods/$(AssemblyName)_copy" Condition="Exists('$(CelesteRootPath)/Mods/$(AssemblyName)_copy')"/>
-    <Delete Files="$(ModAssetsFolderName)\$(AssemblyName).dll;$(ModAssetsFolderName)\$(AssemblyName).pdb"/>
+    <RemoveDir Directories="$(ModAssetsFolderName)/Code"/>
   </Target>
+
+  <ItemGroup>
+    <Reference Include="@(CelesteModReference->'%(Identity)')">
+      <HintPath>$(CelesteRootPath)/Mods/Cache/%(Identity).%(Identity).dll</HintPath>
+      <HintPath Condition="'%(AssemblyName)' != ''">$(CelesteRootPath)/Mods/Cache/%(Identity).%(AssemblyName).dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
 </Project>

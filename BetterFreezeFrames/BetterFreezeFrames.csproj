@@ -2,23 +2,14 @@
   <Import Project="CelesteMod.props" />
 
   <PropertyGroup>
+    <CelesteRootPath>C:\Program Files (x86)\Steam\steamapps\common\Celeste</CelesteRootPath>
     <RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
     <LangVersion>preview</LangVersion>
     <PathMap>$(MSBuildProjectDirectory)=~/$(MSBuildProjectName)</PathMap>
+    <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="System" />
-    <Using Include="System.Collections.Generic" />
-    <Using Include="System.IO" />
-    <Using Include="System.Linq" />
-    <Using Include="System.Threading" />
-    <Using Include="System.Threading.Tasks" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!--don't ask me why amn't i using CelestePublicizer-->
-    <!--i'm always receiving the error that System.Runtime 7.0 is missing-->
     <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,30 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="FemtoHelper">
-      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/FemtoHelper.FemtoHelper.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="IsaGrabBag">
-      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/IsaGrabBag.IsaMods.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="VivHelper">
-      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/VivHelper.VivHelper.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="FlaglinesAndSuch">
-      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/FlaglinesAndSuch.FlaglinesAndSuch.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="VortexHelper">
-      <HintPath>$(CelesteAssemblyPath)/Mods/Cache/VortexHelper.VortexHelper.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ModFolder\Dialog\" />
+    <CelesteModReference Include="FemtoHelper" />
+    <CelesteModReference Include="IsaGrabBag" AssemblyName="IsaMods" />
+    <CelesteModReference Include="VivHelper" />
+    <CelesteModReference Include="FlaglinesAndSuch" />
+    <CelesteModReference Include="VortexHelper" />
   </ItemGroup>
 
   <Import Project="CelesteMod.targets" />

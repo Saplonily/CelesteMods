@@ -1,1 +1,1 @@
-modoptions_betterfreezeframes_debugenabled=Allow you to freeze the game when pressed the Journal key.{n}Recommend For Debug or Test Only.
+modoptions_betterfreezeframes_debugenabled=Allow you to freeze the game when pressed the Journal key.{n}Recommend For Debug or Test only.

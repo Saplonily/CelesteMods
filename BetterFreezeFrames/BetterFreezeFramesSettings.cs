@@ -12,12 +12,12 @@ public class BetterFreezeFramesSettings : EverestModuleSettings
         {
             if (v)
             {
-                BetterFreezeFramesModule.Instance.LoadMain();
                 Enabled = true;
+                Bff.LoadMain();
             }
             else
             {
-                BetterFreezeFramesModule.Instance.UnloadMain();
+                Bff.UnloadMain();
                 Enabled = false;
             }
         }));
@@ -30,12 +30,12 @@ public class BetterFreezeFramesSettings : EverestModuleSettings
         {
             if (v)
             {
-                BetterFreezeFramesModule.Instance.LoadDebug();
                 DebugEnabled = true;
+                Bff.LoadDebug();
             }
             else
             {
-                BetterFreezeFramesModule.Instance.UnloadDebug();
+                Bff.UnloadDebug();
                 DebugEnabled = false;
             }
         });
