@@ -18,12 +18,7 @@ public sealed class BitsHelperModule : EverestModule
         BubbleCollider.Load();
         FloatingBubble.Load();
         BlowBubble.Load();
-    }
-
-    public override void LoadContent(bool firstLoad)
-    {
-        SpriteBank = new SpriteBank(GFX.Game, "Graphics/BitsHelper/Sprites.xml");
-        BlowBubbleIndicatorTexture = GFX.Game["BitsHelper/blowBubbleIndicator"];
+        FacingToggleSwapBlock.Load();
     }
 
     public override void Unload()
@@ -31,5 +26,12 @@ public sealed class BitsHelperModule : EverestModule
         BubbleCollider.Unload();
         FloatingBubble.Unload();
         BlowBubble.Unload();
+        FacingToggleSwapBlock.Unload();
+    }
+
+    public override void LoadContent(bool firstLoad)
+    {
+        SpriteBank = new SpriteBank(GFX.Game, "Graphics/BitsHelper/Sprites.xml");
+        BlowBubbleIndicatorTexture = GFX.Game["BitsHelper/blowBubbleIndicator"];
     }
 }

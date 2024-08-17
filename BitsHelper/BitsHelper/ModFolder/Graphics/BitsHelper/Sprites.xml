@@ -11,5 +11,15 @@
     <Loop id="idle" path="idle" delay="0.1" frames="0"/>
     <Anim id="pop" path="pop" delay="0.01" frames="0-4"/>
   </bubble>
+
+  <facingToggleSwapBlockLight path="objects/swapblock/moon/" start="idle">
+    <Justify x="0.5" y="0.5" />
+    <Loop id="idle" path="midBlock" delay="0.08" frames="0-3" />
+  </facingToggleSwapBlockLight>
+
+  <facingToggleSwapBlockLightRed path="objects/swapblock/moon/" start="idle">
+    <Justify x="0.5" y="0.5" />
+    <Loop id="idle" path="midBlockRed" delay="0.08" frames="0-3" />
+  </facingToggleSwapBlockLightRed>
   
 </Sprites>

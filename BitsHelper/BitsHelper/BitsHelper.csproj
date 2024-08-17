@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-    <CelesteModReference Include="MaxHelpingHand"/>
+    <CelesteModReference Include="MaxHelpingHand" />
 	</ItemGroup>
 
   <ItemGroup>
