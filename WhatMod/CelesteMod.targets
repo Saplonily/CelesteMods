@@ -57,7 +57,7 @@
   <ItemGroup>
     <Reference Include="@(CelesteModReference->'%(Identity)')">
       <HintPath>$(CelesteRootPath)/Mods/Cache/%(Identity).%(Identity).dll</HintPath>
-      <HintPath Condition="'%(AssemblyName)' != ''">$(CelesteRootPath)/Mods/Cache/%(Identity).%(AssemblyName).dll</HintPath>
+      <HintPath>$(CelesteRootPath)/Mods/Cache/%(Identity).%(AssemblyName).dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

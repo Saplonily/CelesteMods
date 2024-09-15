@@ -5,6 +5,8 @@ This is a list of random Celeste mods made by Saplonily, though most of them are
 
 ## Mod 状态 | Mod Status
 
+> 不完全, 因为我很懒(x
+
 - BetterFreezeFrames: 让冻结帧期间的游戏看起来更流畅, 已发布在 [Game Banana](https://gamebanana.com/mods/497556)
 - CNY2024Helper: 画游的 Helper, 已发布在 [Game Banana](https://gamebanana.com/mods/494335)
 - DumpEffect: 测试 mod, 导出蔚蓝本体的所有 Effect 代码.
@@ -19,6 +21,8 @@ This is a list of random Celeste mods made by Saplonily, though most of them are
 - DeadableJellyFish: 在水母死时释放死亡效果, 原版行为为直接消失.
 
 ***
+
+> not complete, cuz I'm lazy :L
 
 - BetterFreezeFrames: Make freeze frames better, released on [Game Banana](https://gamebanana.com/mods/497556)
 - CNY2024Helper: Helper of the GalleryCollab(aka CNY2024), released on [Game Banana](https://gamebanana.com/mods/494335)
@@ -36,9 +40,7 @@ This is a list of random Celeste mods made by Saplonily, though most of them are
 ## 未来的计划 | Future Plans
 
 - MinecraftHelper: 加入一些 Minecraft 的元素.
-- SalKeyOverlayer: 游戏内置的按键显示.
 
 ***
 
 - MinecraftHelper: Add some elements from Minecraft.
-- SalKeyOverlayer: A built-in key display.

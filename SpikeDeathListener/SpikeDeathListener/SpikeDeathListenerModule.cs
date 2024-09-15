@@ -1,4 +1,5 @@
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
 
 namespace Celeste.Mod.SpikeDeathListener;
 
@@ -22,6 +23,8 @@ public class SpikeDeathListenerModule : EverestModule
             cur.Emit(OpCodes.Ldarg_0);
             cur.EmitDelegate((Spikes spikes) =>
             {
+                if (spikes.spikeType != Spikes.TentacleType)
+                    return;
                 var entities = spikes.Scene.Tracker.GetEntities<SpikeDeathListener>();
                 foreach(var entity in entities)
                 {

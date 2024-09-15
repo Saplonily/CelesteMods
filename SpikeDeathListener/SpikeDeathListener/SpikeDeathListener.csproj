@@ -1,24 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="CelesteMod.props" />
-	
-	<PropertyGroup>
-		<RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
-		<LangVersion>preview</LangVersion>
-	</PropertyGroup>
+  <Import Project="CelesteMod.props" />
 
-	<ItemGroup>
-		<Using Include="System" />
-		<Using Include="System.Collections.Generic" />
-		<Using Include="System.IO" />
-		<Using Include="System.Linq" />
-		<Using Include="System.Threading" />
-		<Using Include="System.Threading.Tasks" />
-	</ItemGroup>
+  <PropertyGroup>
+    <CelesteRootPath>C:\Program Files (x86)\Steam\steamapps\common\Celeste</CelesteRootPath>
+    <RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
+    <LangVersion>preview</LangVersion>
+    <ImplicitUsings>true</ImplicitUsings>
+  </PropertyGroup>
 
-	<ItemGroup>
-	  <Folder Include="ModFolder\Loenn\entities\" />
-	  <Folder Include="ModFolder\Loenn\lang\" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <Publicize Include="Celeste" />
+  </ItemGroup>
 
-	<Import Project="CelesteMod.targets" />
+  <Import Project="CelesteMod.targets" />
 </Project>

@@ -1,0 +1,2 @@
+{b3f7cf80-3efd-46fb-b351-90f25a5f82b5} event:/whatmod/what
+{ce6ade55-d5ec-47b2-94a2-7822e570e46d} bank:/whatmodbank
