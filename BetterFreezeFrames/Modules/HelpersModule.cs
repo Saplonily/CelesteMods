@@ -17,7 +17,6 @@ public static class HelpersModule
 
     public static void CheckLoadedStates()
     {
-        return;
         femtoHelperLoaded = Everest.Loader.DependencyLoaded(new() { Name = "FemtoHelper", Version = new(1, 11, 5) });
         isaGrabBagLoaded = Everest.Loader.DependencyLoaded(new() { Name = "IsaGrabBag", Version = new(1, 6, 14) });
         vivHelperLoaded = Everest.Loader.DependencyLoaded(new() { Name = "VivHelper", Version = new(1, 14, 5) });

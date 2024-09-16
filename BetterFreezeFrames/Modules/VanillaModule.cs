@@ -4,6 +4,7 @@ public static class VanillaModule
 {
     public static void Load()
     {
+        On.Monocle.Coroutine.Update += Coroutine_Update;
         On.Celeste.ScreenWipe.Update += ScreenWipe_Update;
         On.Celeste.TriggerSpikes.Update += TriggerSpikes_Update;
         IL.Celeste.DreamBlock.Update += HookUtils.ILHookSkipBaseUpdate<Solid>;
@@ -14,12 +15,19 @@ public static class VanillaModule
 
     public static void Unload()
     {
+        On.Monocle.Coroutine.Update -= Coroutine_Update;
         On.Celeste.ScreenWipe.Update -= ScreenWipe_Update;
         On.Celeste.TriggerSpikes.Update -= TriggerSpikes_Update;
         IL.Celeste.DreamBlock.Update -= HookUtils.ILHookSkipBaseUpdate<Solid>;
         IL.Celeste.LightningRenderer.Update -= HookUtils.ILHookReplaceOnInterval;
         IL.Celeste.SeekerBarrierRenderer.Update -= HookUtils.ILHookReplaceOnInterval;
         IL.Celeste.Refill.Update -= HookUtils.ILHookSkipBaseUpdate<Entity>;
+    }
+
+    private static void Coroutine_Update(On.Monocle.Coroutine.orig_Update orig, Coroutine self)
+    {
+        if (!Bff.FreezeUpdating)
+            orig(self);
     }
 
     public static bool IsSafeToUpdate(Entity entity)
