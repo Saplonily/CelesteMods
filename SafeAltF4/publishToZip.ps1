@@ -1,5 +1,7 @@
+$yml = Get-Content -Path ModFolder/everest.yaml -Raw
+$modName = [regex]::Match($yml, "(?<=Name:\s)(.*?)\n").Value.Trim()
+$version = [regex]::Match($yml, "(?<=Version:\s)(.*?)\n").Value.Trim()
+Write-Host "Building $modName v$version..."
 dotnet build -c Release
-$sh_v_str = Get-Content -Path SafeAltF4/ModFolder/everest.yaml -Raw
-$sh_v = [regex]::Match($sh_v_str, "(?<=Version:\s)(.*?)\n").Value.Trim()
-Compress-Archive SafeAltF4/ModFolder/* "SafeAltF4 v$sh_v.zip" -Force
+Compress-Archive ModFolder/* "$modName v$version.zip" -Force
 dotnet clean

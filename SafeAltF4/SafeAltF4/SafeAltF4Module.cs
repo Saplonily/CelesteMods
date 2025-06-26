@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.Loader;
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using MonoMod.RuntimeDetour;
 using SDL2;
 
@@ -19,8 +20,8 @@ public sealed class SafeAltF4Module : EverestModule
         {
             var assembly = typeof(Game).Assembly;
             string fnaVersion = assembly.GetName().Version.ToString();
-            if (fnaVersion != "23.3.0.0")
-                throw new Exception($"FNA assembly version not match. 23.3.0.0 expected, got {fnaVersion}.");
+            if (fnaVersion != "24.1.0.0")
+                throw new Exception($"FNA assembly version not match. 24.1.0.0 expected, got {fnaVersion}.");
 
             var fnaPlatform = assembly.GetType("Microsoft.Xna.Framework.SDL2_FNAPlatform", true);
             var pollEvents = fnaPlatform.GetMethod("PollEvents", BindingFlags.Static | BindingFlags.Public);

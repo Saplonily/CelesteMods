@@ -2,26 +2,30 @@
 	<Import Project="CelesteMod.props" />
 	
 	<PropertyGroup>
-		<RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
-		<LangVersion>preview</LangVersion>
-	</PropertyGroup>
-	
-	<ItemGroup>
-	  <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-    <Publicize Include="Celeste"/>
-	</ItemGroup>
+    <CelesteRootPath>C:\Program Files (x86)\Steam\steamapps\common\Celeste</CelesteRootPath>
+    <RootNamespace>Celeste.Mod.SafeAltF4</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseCelesteAnalyzer>false</UseCelesteAnalyzer>
+    <UseCelestePublicizer>false</UseCelestePublicizer>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<Using Include="System" />
-		<Using Include="System.Collections.Generic" />
-		<Using Include="System.IO" />
-		<Using Include="System.Linq" />
-		<Using Include="System.Threading" />
-		<Using Include="System.Threading.Tasks" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <Publicize Include="Celeste" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="CelesteMod.props">
+      <Visible>false</Visible>
+    </None>
+    <None Include="CelesteMod.targets">
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
 
 	<Import Project="CelesteMod.targets" />
 </Project>
