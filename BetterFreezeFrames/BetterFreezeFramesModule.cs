@@ -151,6 +151,11 @@ public partial class BetterFreezeFramesModule : EverestModule
                 BaseDreamBlockUpdate(dreamBlock);
                 break;
             }
+            case Water water:
+            {
+                BaseWaterUpdate(water);
+                break;
+            }
             }
         }
         if (scene is Level level)
@@ -166,4 +171,7 @@ public partial class BetterFreezeFramesModule : EverestModule
 
     [MonoModLinkTo("Celeste.DreamBlock", "System.Void Update()"), MonoModForceCall]
     public static void BaseDreamBlockUpdate(DreamBlock dreamBlock) { throw null; }
+
+    [MonoModLinkTo("Celeste.Water", "System.Void Update()"), MonoModForceCall]
+    public static void BaseWaterUpdate(Water water) { throw null; }
 }

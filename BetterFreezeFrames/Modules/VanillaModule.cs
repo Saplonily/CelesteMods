@@ -46,13 +46,13 @@ public static class VanillaModule
                   or FloatingDebris
                   or Decal
                   or TriggerSpikes // with extra patch
-                  or Water // may be incompatible with helper water
                   or ForegroundDebris
                   or Clothesline
                   or CliffFlags
                   or BigWaterfall
                   or MoonCreature
                   or Wire
+                  or SolidTiles
                   ;
 
     private static void TriggerSpikes_Update(On.Celeste.TriggerSpikes.orig_Update orig, TriggerSpikes self)

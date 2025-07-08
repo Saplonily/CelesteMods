@@ -2,20 +2,15 @@
   <Import Project="CelesteMod.props" />
 
   <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
     <CelesteRootPath>C:\Program Files (x86)\Steam\steamapps\common\Celeste</CelesteRootPath>
     <RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
     <LangVersion>preview</LangVersion>
     <PathMap>$(MSBuildProjectDirectory)=~/$(MSBuildProjectName)</PathMap>
     <ImplicitUsings>true</ImplicitUsings>
+    <UseCelestePublicizer>true</UseCelestePublicizer>
+    <UseCelesteAnalyzer>false</UseCelesteAnalyzer>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <Publicize Include="Celeste" />
-  </ItemGroup>
 
   <ItemGroup>
     <CelesteModReference Include="FemtoHelper" />
