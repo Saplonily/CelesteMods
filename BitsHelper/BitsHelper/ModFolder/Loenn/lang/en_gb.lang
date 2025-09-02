@@ -5,4 +5,4 @@ entities.BitsHelper/FacingToggleSwapBlock.placements.name.normal=Facing Toggle S
 
 triggers.BitsHelper/BubbleEmitterFireTrigger.placements.name.normal=Bubble Emitter Fire Trigger
 triggers.BitsHelper/BubbleEmitterFireTrigger.attributes.description.flag=The flag of the emitters to fire. Will fire every emitter if empty.
-
+triggers.BitsHelper/AlterEgoTrigger.placements.name.normal=Alter Ego Trigger

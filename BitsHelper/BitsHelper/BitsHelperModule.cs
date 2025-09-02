@@ -9,6 +9,9 @@ public sealed class BitsHelperModule : EverestModule
     public override Type SessionType => typeof(BitsHelperSession);
     public static BitsHelperSession Session => (BitsHelperSession)Instance._Session;
 
+    public override Type SettingsType => typeof(BitsHelperSettings);
+    public static BitsHelperSettings Settings => (BitsHelperSettings)Instance._Settings;
+
     public SpriteBank SpriteBank { get; private set; }
     public MTexture BlowBubbleIndicatorTexture { get; private set; }
 
@@ -19,6 +22,7 @@ public sealed class BitsHelperModule : EverestModule
         FloatingBubble.Load();
         BlowBubble.Load();
         FacingToggleSwapBlock.Load();
+        AlterEgo.Load();
     }
 
     public override void Unload()
@@ -27,6 +31,7 @@ public sealed class BitsHelperModule : EverestModule
         FloatingBubble.Unload();
         BlowBubble.Unload();
         FacingToggleSwapBlock.Unload();
+        AlterEgo.Unload();
     }
 
     public override void LoadContent(bool firstLoad)
