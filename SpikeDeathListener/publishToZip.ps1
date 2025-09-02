@@ -1,6 +1,7 @@
-$mod_name = "SpikeDeathListener"
+$yml = Get-Content -Path ModFolder/everest.yaml -Raw
+$modName = [regex]::Match($yml, "(?<=Name:\s)(.*?)\n").Value.Trim()
+$version = [regex]::Match($yml, "(?<=Version:\s)(.*?)\n").Value.Trim()
+Write-Host "Building $modName v$version..."
 dotnet build -c Release
-$v_str = Get-Content -Path $mod_name/ModFolder/everest.yaml -Raw
-$v = [regex]::Match($v_str, "(?<=Version:\s)(.*?)\n").Value.Trim()
-Compress-Archive $mod_name/ModFolder/* "$mod_name v$v.zip" -Force
+Compress-Archive ModFolder/* "$modName v$version.zip" -Force
 dotnet clean

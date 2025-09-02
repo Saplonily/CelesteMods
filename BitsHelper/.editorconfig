@@ -1,4 +1,5 @@
 ﻿[*.cs]
 
-# IDE0220: 添加显式转换
 dotnet_diagnostic.IDE0220.severity = silent
+dotnet_diagnostic.IDE0130.severity = silent
+dotnet_diagnostic.IDE0290.severity = silent

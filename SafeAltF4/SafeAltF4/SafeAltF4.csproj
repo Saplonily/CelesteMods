@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="CelesteMod.props" />
-	
-	<PropertyGroup>
+  <Import Project="CelesteMod.props" />
+
+  <PropertyGroup>
     <CelesteRootPath>C:\Program Files (x86)\Steam\steamapps\common\Celeste</CelesteRootPath>
     <RootNamespace>Celeste.Mod.SafeAltF4</RootNamespace>
     <LangVersion>latest</LangVersion>
@@ -27,5 +27,5 @@
     </None>
   </ItemGroup>
 
-	<Import Project="CelesteMod.targets" />
+  <Import Project="CelesteMod.targets" />
 </Project>
