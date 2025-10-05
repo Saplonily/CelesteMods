@@ -3,21 +3,22 @@
 	
 	<PropertyGroup>
     <CelesteRootPath>C:/Program Files (x86)/Steam/steamapps/common/Celeste</CelesteRootPath>
+    <TargetFramework>net8.0</TargetFramework>
 		<RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
 		<LangVersion>preview</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
-	</PropertyGroup>
+    <ModAssetsCopyType>link</ModAssetsCopyType>
+  </PropertyGroup>
 
 	<ItemGroup>
     <CelesteModReference Include="MaxHelpingHand" />
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Krafs.Publicizer" Version="2.2.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <Publicize Include="Celeste" />
+    <Reference Include="NLua.dll">
+      <HintPath>$(CelesteRootPath)/NLua.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
 	<Import Project="CelesteMod.targets" />
