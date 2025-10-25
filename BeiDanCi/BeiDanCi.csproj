@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="CelesteMod.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <CelesteRootPath>C:/Program Files (x86)/Steam/steamapps/common/Celeste</CelesteRootPath>
+    <RootNamespace>Celeste.Mod.BeiDanCi</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseCelesteAnalyzer>false</UseCelesteAnalyzer>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="CelesteMod.props">
+      <Visible>false</Visible>
+    </None>
+    <None Include="CelesteMod.targets">
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Speech" Version="9.0.10" />
+  </ItemGroup>
+
+  <Import Project="CelesteMod.targets" />
+</Project>

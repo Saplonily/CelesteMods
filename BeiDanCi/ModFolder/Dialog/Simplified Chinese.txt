@@ -1,0 +1,18 @@
+modoptions_beidanci_title=背单词
+modoptions_beidanci_possibility=出现概率
+modoptions_beidanci_testmode=测试模式
+modoptions_beidanci_testmode_assessment=熟悉度测试
+modoptions_beidanci_testmode_selectingentozh=根据英文选中文
+modoptions_beidanci_testmode_selectingzhtoen=根据中文选英文
+modoptions_beidanci_rollingmode=随机模式
+modoptions_beidanci_rollingmode_newfirst=学新词
+modoptions_beidanci_rollingmode_recall=回顾
+modoptions_beidanci_rollingmode_review=复习
+modoptions_beidanci_enabledvocabularylibrary=启用的词库
+modoptions_beidanci_vocabularylibrary_tips=
+	添加词库的方法：
+	在获取该 Mod 的地方附近寻找词库文件，
+	然后将词库文件（都是 .csv）文件放置在蔚蓝游戏文件夹下的
+	Vocabulary 文件夹，然后重新打开该设置即可选择放置的词库。
+	注意：背单词的进度等信息与词库文件的名字关联，
+	非必要不要修改词库文件的名字。
