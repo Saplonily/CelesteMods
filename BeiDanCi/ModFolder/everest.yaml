@@ -1,5 +1,5 @@
 - Name: BeiDanCi
-  Version: 0.1.0-beta
+  Version: 0.1.0-beta2
   DLL: Code/BeiDanCi.dll
   Dependencies:
     - Name: EverestCore

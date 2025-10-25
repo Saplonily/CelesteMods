@@ -36,7 +36,7 @@ public sealed class BeiDanCiSettings : EverestModuleSettings
         menu.Add(slider = new TextMenu.Slider(sliderText, i => files[i], 0, files.Count - 1, index));
         slider.Change(i => EnabledVocabularyLibrary = files[i]);
         if (index == -1)
-            EnabledVocabularyLibrary = files[0];
+            EnabledVocabularyLibrary = files.Count > 0 ? files[0] : null;
 
         slider.AddDescription(menu, Dialog.Clean("modoptions_beidanci_vocabularylibrary_tips"));
     }
