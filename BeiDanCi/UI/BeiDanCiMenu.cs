@@ -53,19 +53,20 @@ public sealed class BeiDanCiMenu : TextMenu
     private void AddSelectTranslation(string word, IReadOnlyList<string> selections, int correctIndex)
     {
         Add(new Header(Dialog.Get("beidanci_ui_select_correct_trans")));
-        Add(new Button(word) { Selectable = false });
+        Add(new MultilineButton(word) { Selectable = false });
         Add(new LinePadding());
         int index = 0;
         foreach (var selection in selections)
         {
-            DisabledNoSoundButton button;
-            Add(button = new DisabledNoSoundButton(selection));
+            DisabledNoSoundMultilineButton button;
+            Add(button = new DisabledNoSoundMultilineButton(selection));
             if (index == correctIndex)
                 button.OnPressed = () => OnAnswer(true);
             else
                 button.OnPressed = () => OnAnswer(false);
             index++;
         }
+        Add(new LinePadding());
         Add(new DisabledNoSoundButton(Dialog.Get("beidanci_ui_dontknow")) { OnPressed = () => OnAnswer(false) });
 
         void OnAnswer(bool correct)
@@ -82,8 +83,8 @@ public sealed class BeiDanCiMenu : TextMenu
     private void AddSelectTranslationResult(string word, string correctSelection, bool correct)
     {
         Add(new Header(correct ? Dialog.Get("beidanci_ui_answer_correct") : Dialog.Get("beidanci_ui_answer_wrong")));
-        Add(new Button(word) { Selectable = false });
-        Add(new Button(correctSelection) { Selectable = false });
+        Add(new MultilineButton(word) { Selectable = false });
+        Add(new MultilineButton(correctSelection) { Selectable = false });
         Add(new LinePadding());
         Add(new Button(Dialog.Get("beidanci_ui_ok")).Pressed(() => { Close(); CanReload?.Invoke(); }));
     }

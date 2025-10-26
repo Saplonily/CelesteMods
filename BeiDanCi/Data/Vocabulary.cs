@@ -125,7 +125,7 @@ public sealed partial record Vocabulary(
         RollIndexes(random, choices, 0, vocabularies.Count);
         List<string> selections = new();
         foreach (var i in choices)
-            selections.Add(string.Join(' ', vocabularies[i].Meanings));
+            selections.Add(string.Join('\n', vocabularies[i].Meanings));
 
         int correctIndex = random.Next(0, 4);
 
@@ -144,7 +144,7 @@ public sealed partial record Vocabulary(
 
         int correctIndex = random.Next(0, 4);
 
-        return new SelectTranslationQuestion(string.Join(' ', vocabularies[choices[correctIndex]].Meanings), selections, correctIndex);
+        return new SelectTranslationQuestion(string.Join('\n', vocabularies[choices[correctIndex]].Meanings), selections, correctIndex);
     }
 
     [GeneratedRegex(@"([a-zA-Z]+\.)(.*?)(?=[a-zA-Z]+\.|$)", RegexOptions.IgnoreCase)]
