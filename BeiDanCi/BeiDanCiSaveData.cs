@@ -21,7 +21,7 @@ public sealed class BeiDanCiSaveData
             if (Unfamiliars.TryGetValue(word, out int v1))
             {
                 v1++;
-                if (v1 >= 5)
+                if (v1 >= 7)
                 {
                     Unfamiliars.Remove(word);
                     Reviews.Add(word, 0);
