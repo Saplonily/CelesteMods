@@ -1,3 +1,5 @@
+using YamlDotNet.Serialization;
+
 namespace Celeste.Mod.BeiDanCi;
 
 public enum BeiDanCiTestMode
@@ -31,6 +33,57 @@ public sealed class BeiDanCiSettings : EverestModuleSettings
     public int CooldownWhenSkipped { get; set; } = 10;
 
     public string? EnabledVocabularyLibrary { get; set; }
+
+    [SettingSubMenu]
+    public class CheckWordsSubMenu
+    {
+        [SettingIgnore, YamlIgnore]
+        public bool IsUnfamiliar { get; set; }
+
+        [YamlIgnore]
+        public int NumberOfEntries { get; set; } = 10;
+
+        private List<TextMenu.Button> topLabels = new();
+
+        public CheckWordsSubMenu(bool isUnfamiliar)
+            => IsUnfamiliar = isUnfamiliar;
+
+        public void CreateNumberOfEntriesEntry(TextMenuExt.SubMenu menu, bool inGame)
+        {
+            string label = Dialog.Get("modoptions_beidanci_words_numberofentries");
+            menu.Add(new TextMenuExt.IntSlider(label, 5, 30, 10).Change(v =>
+            {
+                NumberOfEntries = v;
+                if (topLabels.Count > 0)
+                {
+                    foreach (var item in topLabels)
+                        menu.Remove(item);
+                    topLabels.Clear();
+                }
+                BuildTops(menu);
+            }));
+
+            BuildTops(menu);
+
+            void BuildTops(TextMenuExt.SubMenu menu)
+            {
+                var dic = IsUnfamiliar ? BeiDanCiModule.SaveData.Unfamiliars : BeiDanCiModule.SaveData.Reviews;
+                var tops = dic.OrderBy(p => p.Value).Take(NumberOfEntries);
+                foreach (var top in tops)
+                {
+                    var button = new TextMenu.Button($"{top.Value}: {top.Key}");
+                    menu.Add(button);
+                    topLabels.Add(button);
+                }
+            }
+        }
+    }
+
+    [YamlIgnore]
+    public CheckWordsSubMenu UnfamiliarWords { get; set; } = new(true);
+
+    [YamlIgnore]
+    public CheckWordsSubMenu ReviewWords { get; set; } = new(false);
 
     public void CreateEnabledVocabularyLibraryEntry(TextMenu menu, bool inGame)
     {

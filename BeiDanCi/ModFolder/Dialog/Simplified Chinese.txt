@@ -23,6 +23,9 @@ modoptions_beidanci_vocabularylibrary_tips=
 	Vocabulary 文件夹，然后重新打开该设置即可选择放置的词库。
 	注意：背单词的进度等信息与词库文件的名字关联，
 	非必要不要修改词库文件的名字。
+modoptions_beidanci_unfamiliarwords=生词列表
+modoptions_beidanci_reviewwords=复习列表
+modoptions_beidanci_words_numberofentries=项数
 beidanci_ui_dontknow=不认识
 beidanci_ui_know=认识
 beidanci_ui_uncertain=模糊
