@@ -74,7 +74,7 @@ public sealed class BeiDanCiMenu : TextMenu
             if (skipCooling)
                 return;
             Clear();
-            AddSelectTranslationResult(word, selections[correctIndex], true);
+            AddSelectTranslationResult(word, selections[correctIndex], correct);
             FirstSelection();
         }
     }
