@@ -64,9 +64,11 @@ public sealed class BeiDanCiSettings : EverestModuleSettings
             }));
 
             BuildTops(menu);
-
+            
             void BuildTops(TextMenuExt.SubMenu menu)
             {
+                if (BeiDanCiModule.SaveData is null)
+                    return;
                 var dic = IsUnfamiliar ? BeiDanCiModule.SaveData.Unfamiliars : BeiDanCiModule.SaveData.Reviews;
                 var tops = dic.OrderBy(p => p.Value).Take(NumberOfEntries);
                 foreach (var top in tops)
