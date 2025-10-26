@@ -16,3 +16,17 @@ modoptions_beidanci_vocabularylibrary_tips=
 	Vocabulary 文件夹，然后重新打开该设置即可选择放置的词库。
 	注意：背单词的进度等信息与词库文件的名字关联，
 	非必要不要修改词库文件的名字。
+
+beidanci_ui_dontknow=不认识
+beidanci_ui_know=认识
+beidanci_ui_uncertain=模糊
+beidanci_ui_select_correct_trans=选择正确的翻译
+beidanci_ui_answer_correct=回答正确
+beidanci_ui_answer_wrong=回答错误
+beidanci_ui_ok=确认
+beidanci_ui_title=背单词
+beidanci_ui_check_meaning=查看释义
+beidanci_ui_meaning=释义
+beidanci_ui_sentences=例句
+beidanci_ui_listen=发音
+beidanci_ui_listen_again=再次发音

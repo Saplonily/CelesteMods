@@ -52,7 +52,7 @@ public sealed class BeiDanCiMenu : TextMenu
 
     private void AddSelectTranslation(string word, IReadOnlyList<string> selections, int correctIndex)
     {
-        Add(new Header("选择正确的翻译"));
+        Add(new Header(Dialog.Get("beidanci_ui_select_correct_trans")));
         Add(new Button(word) { Selectable = false });
         Add(new LinePadding());
         int index = 0;
@@ -61,14 +61,14 @@ public sealed class BeiDanCiMenu : TextMenu
             CanBeDisabledButton button;
             Add(button = new CanBeDisabledButton(selection));
             if (index == correctIndex)
-                button.OnPressed = AnswerCorrect;
+                button.OnPressed = () => OnAnswer(true);
             else
-                button.OnPressed = AnswerWrong;
+                button.OnPressed = () => OnAnswer(false);
             index++;
         }
-        Add(new CanBeDisabledButton("不认识") { OnPressed = AnswerWrong });
+        Add(new CanBeDisabledButton(Dialog.Get("beidanci_ui_dontknow")) { OnPressed = () => OnAnswer(false) });
 
-        void AnswerCorrect()
+        void OnAnswer(bool correct)
         {
             // uuuuuuuuuuugly
             if (skipCooling)
@@ -77,38 +77,28 @@ public sealed class BeiDanCiMenu : TextMenu
             AddSelectTranslationResult(word, selections[correctIndex], true);
             FirstSelection();
         }
-
-        void AnswerWrong()
-        {
-            // uuuuuuuuuuugly
-            if (skipCooling)
-                return;
-            Clear();
-            AddSelectTranslationResult(word, selections[correctIndex], false);
-            FirstSelection();
-        }
     }
 
     private void AddSelectTranslationResult(string word, string correctSelection, bool correct)
     {
-        Add(new Header(correct ? "√ 回答正确" : "× 回答错误"));
+        Add(new Header(correct ? Dialog.Get("beidanci_ui_answer_correct") : Dialog.Get("beidanci_ui_answer_wrong")));
         Add(new Button(word) { Selectable = false });
         Add(new Button(correctSelection) { Selectable = false });
         Add(new LinePadding());
-        Add(new Button("确认").Pressed(() => { Close(); CanReload?.Invoke(); }));
+        Add(new Button(Dialog.Get("beidanci_ui_ok")).Pressed(() => { Close(); CanReload?.Invoke(); }));
     }
 
     private void AddAssessment(AssessmentQuestion question)
     {
-        Add(new Header("背单词"));
+        Add(new Header(Dialog.Get("beidanci_ui_title")));
 
         Add(new Button(question.Word) { Selectable = false });
 
         if (question.Pronunciation is not null)
             Add(new Button(question.Pronunciation) { Selectable = false });
         Add(new LinePadding());
-        Add(new CanBeDisabledButton("查看释义").Pressed(CheckMeaning));
-        Add(new CanBeDisabledButton("再次发音").Pressed(() => Speak(question.Word)));
+        Add(new CanBeDisabledButton(Dialog.Get("beidanci_ui_check_meaning")).Pressed(CheckMeaning));
+        Add(new CanBeDisabledButton(Dialog.Get("beidanci_ui_listen_again")).Pressed(() => Speak(question.Word)));
 
         Speak(question.Word);
 
@@ -129,31 +119,31 @@ public sealed class BeiDanCiMenu : TextMenu
         IEnumerable<string>? sentences
     )
     {
-        Add(new Header("背单词"));
+        Add(new Header(Dialog.Get("beidanci_ui_title")));
 
         Add(new Button(word) { Selectable = false });
         if (pronunciation is not null)
             Add(new Button(pronunciation) { Selectable = false });
 
-        Add(new Button("发音").Pressed(() => Speak(word)));
+        Add(new Button(Dialog.Get("beidanci_ui_listen")).Pressed(() => Speak(word)));
         Add(new LinePadding());
 
-        Add(new SubHeader("释义") { TopPadding = false });
+        Add(new SubHeader(Dialog.Get("beidanci_ui_meaning")) { TopPadding = false });
         foreach (var meaning in meanings)
             Add(new Button(meaning) { Selectable = false });
 
         if (sentences is not null)
         {
-            Add(new SubHeader("例句") { TopPadding = false });
+            Add(new SubHeader(Dialog.Get("beidanci_ui_sentences")) { TopPadding = false });
             foreach (var sentence in sentences)
                 Add(new Button(sentence) { Selectable = false });
         }
 
         Add(new LinePadding());
 
-        Add(new Button("认识").Pressed(() => Result(0)));
-        Add(new Button("模糊").Pressed(() => Result(1)));
-        Add(new Button("不认识").Pressed(() => Result(2)));
+        Add(new Button(Dialog.Get("beidanci_ui_know")).Pressed(() => Result(0)));
+        Add(new Button(Dialog.Get("beidanci_ui_uncertain")).Pressed(() => Result(1)));
+        Add(new Button(Dialog.Get("beidanci_ui_dontknow")).Pressed(() => Result(2)));
 
 
         void Result(int reportValue)
