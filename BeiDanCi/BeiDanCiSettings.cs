@@ -16,6 +16,8 @@ public enum BeiDanCiRollingMode
 
 public sealed class BeiDanCiSettings : EverestModuleSettings
 {
+    [SettingSubText("modoptions_beidanci_enabled_desc")]
+    public bool Enabled { get; set; } = true;
 
     public BeiDanCiTestMode TestMode { get; set; }
 
@@ -23,6 +25,10 @@ public sealed class BeiDanCiSettings : EverestModuleSettings
 
     [SettingRange(1, 10)]
     public int Possibility { get; set; } = 10;
+
+    [SettingRange(1, 15)]
+    [SettingSubText("modoptions_beidanci_cooldownwhenskipped_desc")]
+    public int CooldownWhenSkipped { get; set; } = 10;
 
     public string? EnabledVocabularyLibrary { get; set; }
 

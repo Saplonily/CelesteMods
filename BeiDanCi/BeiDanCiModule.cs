@@ -58,14 +58,13 @@ public sealed class BeiDanCiModule : EverestModule
             string file = Path.Combine(VocabularyPath, Settings.EnabledVocabularyLibrary + ".csv");
             if (!File.Exists(file))
                 return;
+
+            string? firstLine = ReadFirstLine(file);
+
             using FileStream fs = new(file, FileMode.Open, FileAccess.Read);
-            using StreamReader srPreview = new(fs, Encoding.UTF8, leaveOpen: true);
-            string? firstLine = srPreview.ReadLine();
-            bool isIwpm = firstLine is "I";
-            if (!isIwpm)
-                fs.Seek(0, SeekOrigin.Begin);
             using StreamReader sr = new(fs, Encoding.UTF8, leaveOpen: true);
-            if (isIwpm)
+
+            if (firstLine is "I")
                 sr.ReadLine();
             CurrentVocabularyLibrary = Vocabulary.ReadFrom(
                 sr,
@@ -75,6 +74,13 @@ public sealed class BeiDanCiModule : EverestModule
             );
             CurrentVocabularyLibraryName = Settings.EnabledVocabularyLibrary;
             LoadCurrentLibrarySave();
+        }
+
+        static string? ReadFirstLine(string file)
+        {
+            using FileStream fs = new(file, FileMode.Open, FileAccess.Read);
+            using StreamReader sr = new(fs, Encoding.UTF8, leaveOpen: true);
+            return sr.ReadLine();
         }
     }
 
@@ -125,6 +131,7 @@ public sealed class BeiDanCiModule : EverestModule
     private static void PlayerDeadBody_End(On.Celeste.PlayerDeadBody.orig_End orig, PlayerDeadBody self)
     {
         if (
+            !Settings.Enabled ||
             CurrentVocabularyLibrary is null ||
             Random.Shared.Next(0, 10) > Settings.Possibility ||
             (Settings.TestMode == BeiDanCiTestMode.Assessment && !AbleToRollAssessment(SaveData, Settings.RollingMode)) ||

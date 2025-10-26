@@ -26,13 +26,13 @@ public sealed class BeiDanCiMenu : TextMenu
     public void MarkIsBySkipping()
     {
         foreach (var item in Items)
-            if (item is CanBeDisabledButton button)
+            if (item is DisabledNoSoundButton button)
                 button.Disabled = true;
         skipCooling = true;
-        Alarm.Set(this, 1.5f, () =>
+        Alarm.Set(this, BeiDanCiModule.Settings.CooldownWhenSkipped / 10f, () =>
         {
             foreach (var item in Items)
-                if (item is CanBeDisabledButton button)
+                if (item is DisabledNoSoundButton button)
                     button.Disabled = false;
             skipCooling = false;
         });
@@ -58,15 +58,15 @@ public sealed class BeiDanCiMenu : TextMenu
         int index = 0;
         foreach (var selection in selections)
         {
-            CanBeDisabledButton button;
-            Add(button = new CanBeDisabledButton(selection));
+            DisabledNoSoundButton button;
+            Add(button = new DisabledNoSoundButton(selection));
             if (index == correctIndex)
                 button.OnPressed = () => OnAnswer(true);
             else
                 button.OnPressed = () => OnAnswer(false);
             index++;
         }
-        Add(new CanBeDisabledButton(Dialog.Get("beidanci_ui_dontknow")) { OnPressed = () => OnAnswer(false) });
+        Add(new DisabledNoSoundButton(Dialog.Get("beidanci_ui_dontknow")) { OnPressed = () => OnAnswer(false) });
 
         void OnAnswer(bool correct)
         {
@@ -97,8 +97,8 @@ public sealed class BeiDanCiMenu : TextMenu
         if (question.Pronunciation is not null)
             Add(new Button(question.Pronunciation) { Selectable = false });
         Add(new LinePadding());
-        Add(new CanBeDisabledButton(Dialog.Get("beidanci_ui_check_meaning")).Pressed(CheckMeaning));
-        Add(new CanBeDisabledButton(Dialog.Get("beidanci_ui_listen_again")).Pressed(() => Speak(question.Word)));
+        Add(new DisabledNoSoundButton(Dialog.Get("beidanci_ui_check_meaning")).Pressed(CheckMeaning));
+        Add(new DisabledNoSoundButton(Dialog.Get("beidanci_ui_listen_again")).Pressed(() => Speak(question.Word)));
 
         Speak(question.Word);
 

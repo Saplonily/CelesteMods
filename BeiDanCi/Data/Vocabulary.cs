@@ -96,8 +96,8 @@ public sealed partial record Vocabulary(
             int count = saveData.Unfamiliars.Count;
             if (count == 0)
                 goto Reroll;
-            var pair = saveData.Unfamiliars.ElementAt(random.Next(0, count));
-            vocabulary = vocabularies.First(v => v.Word == pair.Key);
+            string word = TimesWeightedRandom(random, saveData.Unfamiliars);
+            vocabulary = vocabularies.First(v => v.Word == word);
         }
         // 复习的单词
         else if (r >= s2)
@@ -105,8 +105,8 @@ public sealed partial record Vocabulary(
             int count = saveData.Reviews.Count;
             if (count == 0)
                 goto Reroll;
-            var pair = saveData.Reviews.ElementAt(random.Next(0, count));
-            vocabulary = vocabularies.First(v => v.Word == pair.Key);
+            string word = TimesWeightedRandom(random, saveData.Reviews);
+            vocabulary = vocabularies.First(v => v.Word == word);
         }
         else
         {
@@ -147,7 +147,7 @@ public sealed partial record Vocabulary(
         return new SelectTranslationQuestion(string.Join(' ', vocabularies[choices[correctIndex]].Meanings), selections, correctIndex);
     }
 
-    [GeneratedRegex(@"[a-z]+\.\s*[^a-z]*(?=[a-z]+\.\s*|$)", RegexOptions.IgnoreCase)]
+    [GeneratedRegex(@"([a-zA-Z]+\.)(.*?)(?=[a-zA-Z]+\.|$)", RegexOptions.IgnoreCase)]
     private static partial Regex GetSplitMeaningRegex();
 
     private static void RollIndexes(Random random, Span<int> destinationSpan, int minValue, int maxValue)
@@ -157,14 +157,47 @@ public sealed partial record Vocabulary(
 
         for (int i = 0; i < destinationSpan.Length; i++)
         {
-        ReRoll:
+        Reroll:
             int value = random.Next(minValue, maxValue);
 
             for (int j = 0; j < i; j++)
                 if (destinationSpan[j] == value)
-                    goto ReRoll;
+                    goto Reroll;
 
             destinationSpan[i] = value;
         }
+    }
+
+    private static T WeightedRandom<T>(Random random, IEnumerable<T> items, IReadOnlyList<int> weights)
+    {
+        int sumOfWeights = weights.Sum();
+        int value = random.Next(0, sumOfWeights);
+
+        int current = value;
+        int i = 0;
+        foreach (var item in items)
+        {
+            current -= weights[i];
+            if (current < 0)
+                return item;
+            i++;
+        }
+
+        throw new UnreachableException();
+    }
+
+    private static T TimesWeightedRandom<T>(Random random, IEnumerable<KeyValuePair<T, int>> items)
+    {
+        List<int> weights = new(16);
+        int max = items.Max(i => i.Value);
+        if (max < 1) max = 1;
+
+        foreach (var item in items)
+        {
+            int v = max - item.Value;
+            weights.Add(v * v / 2 + 1);
+        }
+
+        return WeightedRandom(random, items.Select(i => i.Key), weights);
     }
 }

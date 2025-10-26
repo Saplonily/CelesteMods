@@ -1,8 +1,8 @@
 ﻿namespace Celeste.Mod.BeiDanCi;
 
-public sealed class CanBeDisabledButton : TextMenu.Button
+public sealed class DisabledNoSoundButton : TextMenu.Button
 {
-    public CanBeDisabledButton(string label)
+    public DisabledNoSoundButton(string label)
         : base(label)
     {
     }

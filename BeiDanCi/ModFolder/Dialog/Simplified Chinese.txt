@@ -1,5 +1,12 @@
-modoptions_beidanci_title=背单词
+modoptions_beidanci_title=背单词 | By Saplonily
+modoptions_beidanci_enabled=开启
+modoptions_beidanci_enabled_desc=如果你不是因为推图而红温了的话不建议偷懒关掉哦~
 modoptions_beidanci_possibility=出现概率
+modoptions_beidanci_cooldownwhenskipped=误触冷却
+modoptions_beidanci_cooldownwhenskipped_desc=
+	在原版中按下确认键会跳过死亡动画并快速重载关卡，
+	这可能会导致误触本 Mod 的菜单按钮，
+	该选项用于调整动画被跳过时菜单被临时禁用的时间。
 modoptions_beidanci_testmode=测试模式
 modoptions_beidanci_testmode_assessment=熟悉度测试
 modoptions_beidanci_testmode_selectingentozh=根据英文选中文
@@ -16,7 +23,6 @@ modoptions_beidanci_vocabularylibrary_tips=
 	Vocabulary 文件夹，然后重新打开该设置即可选择放置的词库。
 	注意：背单词的进度等信息与词库文件的名字关联，
 	非必要不要修改词库文件的名字。
-
 beidanci_ui_dontknow=不认识
 beidanci_ui_know=认识
 beidanci_ui_uncertain=模糊
