@@ -1,5 +1,5 @@
 - Name: BetterFreezeFrames
-  Version: 0.3.3
+  Version: 0.3.4
   DLL: Code/BetterFreezeFrames.dll
   Dependencies:
     - Name: EverestCore
@@ -15,3 +15,5 @@
       Version: 1.6.19
     - Name: VortexHelper
       Version: 1.2.14
+    - Name: PandorasBox
+      Version: 1.0.49

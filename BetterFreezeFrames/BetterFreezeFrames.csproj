@@ -1,24 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="CelesteMod.props" />
+	<Import Project="CelesteMod.props" />
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <CelesteRootPath>C:\Program Files (x86)\Steam\steamapps\common\Celeste</CelesteRootPath>
-    <RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
-    <LangVersion>preview</LangVersion>
-    <PathMap>$(MSBuildProjectDirectory)=~/$(MSBuildProjectName)</PathMap>
-    <ImplicitUsings>true</ImplicitUsings>
-    <UseCelestePublicizer>true</UseCelestePublicizer>
-    <UseCelesteAnalyzer>false</UseCelesteAnalyzer>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<CelesteRootPath>C:\Program Files (x86)\Steam\steamapps\common\Celeste</CelesteRootPath>
+		<RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
+		<LangVersion>preview</LangVersion>
+		<PathMap>$(MSBuildProjectDirectory)=~/$(MSBuildProjectName)</PathMap>
+		<ImplicitUsings>true</ImplicitUsings>
+		<UseCelestePublicizer>true</UseCelestePublicizer>
+		<UseCelesteAnalyzer>false</UseCelesteAnalyzer>
 
-  <ItemGroup>
-    <CelesteModReference Include="FemtoHelper" />
-    <CelesteModReference Include="IsaGrabBag" AssemblyName="IsaMods" />
-    <CelesteModReference Include="VivHelper" />
-    <CelesteModReference Include="FlaglinesAndSuch" />
-    <CelesteModReference Include="VortexHelper" />
-  </ItemGroup>
+		<PublicizerRuntimeStrategies>Unsafe</PublicizerRuntimeStrategies>
+	</PropertyGroup>
 
-  <Import Project="CelesteMod.targets" />
+	<ItemGroup>
+		<CelesteModReference Include="FemtoHelper" />
+		<CelesteModReference Include="IsaGrabBag" AssemblyName="IsaMods" />
+		<CelesteModReference Include="VivHelper" />
+		<CelesteModReference Include="FlaglinesAndSuch" />
+		<CelesteModReference Include="VortexHelper" />
+		<CelesteModReference Include="PandorasBox" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Krafs.Publicizer" Version="2.3.0" Aliases="KP">
+	    <IncludeAssets>runtime; build; native; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Publicize Include="PandorasBox.PandorasBox" />
+	</ItemGroup>
+
+	<Import Project="CelesteMod.targets" />
 </Project>

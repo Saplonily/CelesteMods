@@ -12,6 +12,7 @@ public static class HelpersModule
     private static bool vivHelperLoaded;
     private static bool flaglinesAndSuchLoaded;
     private static bool vortexHelperLoaded;
+    private static bool pandorasBoxLoaded;
 
     private static ILHook VortexHelperBarrierILHook;
 
@@ -22,6 +23,7 @@ public static class HelpersModule
         vivHelperLoaded = Everest.Loader.DependencyLoaded(new() { Name = "VivHelper", Version = new(1, 14, 5) });
         flaglinesAndSuchLoaded = Everest.Loader.DependencyLoaded(new() { Name = "FlaglinesAndSuch", Version = new(1, 6, 19) });
         vortexHelperLoaded = Everest.Loader.DependencyLoaded(new() { Name = "VortexHelper", Version = new(1, 2, 14) });
+        pandorasBoxLoaded = Everest.Loader.DependencyLoaded(new() { Name = "PandorasBox", Version = new(1, 0, 49) });
     }
 
     public static bool IsSafeToUpdate(Entity entity)
@@ -30,7 +32,8 @@ public static class HelpersModule
                (isaGrabBagLoaded && CheckIsaGrabBag(entity)) ||
                (vivHelperLoaded && CheckVivHelper(entity)) ||
                (flaglinesAndSuchLoaded && CheckFlaglinesAndSuch(entity)) ||
-               (vortexHelperLoaded && CheckVortexHelper(entity));
+               (vortexHelperLoaded && CheckVortexHelper(entity)) ||
+               (pandorasBoxLoaded && CheckPandorasBox(entity));
 
         static bool CheckVivHelper(Entity entity)
             => entity is VivHelperEntities.CustomTorch or VivHelperEntities.CustomTorch2 or VivHelperEntities.AnimatedSpinner;
@@ -42,10 +45,13 @@ public static class HelpersModule
             => entity is IsaGrabBag.DreamSpinnerRenderer;
 
         static bool CheckFlaglinesAndSuch(Entity entity)
-            => entity is FlaglinesAndSuch.CustomFlagline;
+            => entity is global::FlaglinesAndSuch.CustomFlagline;
 
         static bool CheckVortexHelper(Entity entity)
             => entity is VortexPufferBarrierRenderer or VortexPufferBarrier;
+
+        static bool CheckPandorasBox(Entity entity)
+            => entity is PandorasBox.ColoredWater;
     }
 
     public static void Load()
