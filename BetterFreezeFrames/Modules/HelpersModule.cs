@@ -13,6 +13,7 @@ public static class HelpersModule
     private static bool flaglinesAndSuchLoaded;
     private static bool vortexHelperLoaded;
     private static bool pandorasBoxLoaded;
+    private static bool jackalHelperLoaded;
 
     private static ILHook VortexHelperBarrierILHook;
 
@@ -24,6 +25,7 @@ public static class HelpersModule
         flaglinesAndSuchLoaded = Everest.Loader.DependencyLoaded(new() { Name = "FlaglinesAndSuch", Version = new(1, 6, 19) });
         vortexHelperLoaded = Everest.Loader.DependencyLoaded(new() { Name = "VortexHelper", Version = new(1, 2, 14) });
         pandorasBoxLoaded = Everest.Loader.DependencyLoaded(new() { Name = "PandorasBox", Version = new(1, 0, 49) });
+        jackalHelperLoaded = Everest.Loader.DependencyLoaded(new() { Name = "JackalHelper", Version = new(1, 7, 5) });
     }
 
     public static bool IsSafeToUpdate(Entity entity)
@@ -33,7 +35,8 @@ public static class HelpersModule
                (vivHelperLoaded && CheckVivHelper(entity)) ||
                (flaglinesAndSuchLoaded && CheckFlaglinesAndSuch(entity)) ||
                (vortexHelperLoaded && CheckVortexHelper(entity)) ||
-               (pandorasBoxLoaded && CheckPandorasBox(entity));
+               (pandorasBoxLoaded && CheckPandorasBox(entity)) ||
+               (jackalHelperLoaded && CheckJackalHelper(entity));
 
         static bool CheckVivHelper(Entity entity)
             => entity is VivHelperEntities.CustomTorch or VivHelperEntities.CustomTorch2 or VivHelperEntities.AnimatedSpinner;
@@ -52,6 +55,9 @@ public static class HelpersModule
 
         static bool CheckPandorasBox(Entity entity)
             => entity is PandorasBox.ColoredWater;
+
+        static bool CheckJackalHelper(Entity entity)
+            => entity is JackalHelper.Entities.DeadlyWater;
     }
 
     public static void Load()
