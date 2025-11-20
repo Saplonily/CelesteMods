@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SafeAltF4/SafeAltF4.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+</Solution>
