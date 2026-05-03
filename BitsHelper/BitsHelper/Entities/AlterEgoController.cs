@@ -96,7 +96,10 @@ public sealed class AlterEgoController : Entity
         if (player == original)
             return false;
         if (current.player == player)
-            TrySwitchToNext();
+        {
+            if (!TrySwitchToNext())
+                return false;
+        }
         alterEgos.Remove(player);
         player.RemoveSelf();
         current.index = alterEgos.IndexOf(current.player);
@@ -131,25 +134,26 @@ public sealed class AlterEgoController : Entity
         if (CheckBlockedOut(Scene, previousPlayer))
             return false;
 
+        int initCurrentIndex = current.index;
         int nextIndex = (current.index + 1) % alterEgos.Count;
-        int initNextIndex = nextIndex;
         Player nextPlayer = alterEgos[nextIndex];
         while (CheckBlockedIn(Scene, nextPlayer))
         {
             nextIndex++;
             nextIndex %= alterEgos.Count;
-            if (nextIndex == initNextIndex)
+            if (nextIndex == initCurrentIndex)
                 return false;
             nextPlayer = alterEgos[nextIndex];
         }
 
-        current = (nextIndex, nextPlayer);
-        var currentPlayer = current.player;
-        if (currentPlayer.Scene != Scene)
+        if (nextPlayer.Scene != Scene)
         {
             // the player was removed (maybe died)
             return false;
         }
+
+        current = (nextIndex, nextPlayer);
+        var currentPlayer = current.player;
 
         previousPlayer.Drop();
         if (holdInteractions)
