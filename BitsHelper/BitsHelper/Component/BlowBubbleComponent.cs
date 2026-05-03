@@ -1,4 +1,4 @@
-﻿using Celeste.Mod.BitsHelper.Entities;
+using Celeste.Mod.BitsHelper.Entities;
 
 namespace Celeste.Mod.BitsHelper;
 
@@ -8,7 +8,7 @@ public sealed class BlowBubbleComponent : Component
     private int bubblesCount;
 
     public BlowBubbleComponent()
-        : base(true,true)
+        : base(true, true)
     {
         indicatorTexture = GFX.Game["BitsHelper/blowBubbleIndicator"];
         bubblesCount = 0;
@@ -28,10 +28,10 @@ public sealed class BlowBubbleComponent : Component
         bubblesCount -= 1;
         Input.Grab.ConsumePress();
         Vector2 position = player.Position + new Vector2(0f, -8f);
-        Vector2 speed = Vector2.UnitX * (float)player.Facing * 60f;
+        Vector2 initialVelocity = Vector2.UnitX * (float)player.Facing * 60f;
         if (Input.MoveY.Value == 1)
-            speed.X = 0f;
-        FloatingBubble bubble = new(position, speed, true);
+            initialVelocity.X = 0f;
+        FloatingBubble bubble = new(position, initialVelocity, fromPlayer: true);
         Scene.Add(bubble);
         Audio.Play(BitsHelperSFX.BubbleAppear, bubble.Position);
     }

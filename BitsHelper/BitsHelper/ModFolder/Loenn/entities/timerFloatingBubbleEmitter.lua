@@ -7,7 +7,9 @@ entity.placements = {
     data = {
         interval = 1.0,
         attach = false,
-        initialTimer = 1.0
+        initialTimer = 1.0,
+        speedMultiplier = 1.0,
+        noSfx = false
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +9,12 @@ namespace Celeste.Mod.BitsHelper.Entities;
 
 public abstract class FloatingBubbleEmitter : Entity
 {
+    protected readonly bool noSfx;
+    protected readonly float speedMultiplier;
     protected readonly Sprite sprite;
     protected bool firing;
 
-    public FloatingBubbleEmitter(Vector2 position, bool attach) : base(position)
+    public FloatingBubbleEmitter(Vector2 position, bool attach, float speedMultiplier, bool noSfx) : base(position)
     {
         Add(sprite = BitsHelperModule.Instance.SpriteBank.Create("bubbleEmitter"));
         sprite.CenterOrigin();
@@ -27,6 +29,9 @@ public abstract class FloatingBubbleEmitter : Entity
                 JumpThruChecker = jumpthru => jumpthru.CollidePoint(Position + new Vector2(0f, 16f))
             });
         }
+
+        this.speedMultiplier = speedMultiplier;
+        this.noSfx = noSfx;
     }
 
     public void Fire()
@@ -41,8 +46,9 @@ public abstract class FloatingBubbleEmitter : Entity
         sprite.Play("open");
         while (sprite.CurrentAnimationFrame != 1)
             yield return null;
-        Scene.Add(new FloatingBubble(new Vector2(Position.X, Position.Y - 18), Vector2.Zero));
-        Audio.Play("event:/BitsHelper/bubblefx/bubble_appear", Position);
+        Scene.Add(new FloatingBubble(new Vector2(Position.X, Position.Y - 18), Vector2.Zero, speedMultiplier));
+        if (!noSfx)
+            Audio.Play(BitsHelperSFX.BubbleAppear, Position);
         yield return null;
         firing = false;
     }

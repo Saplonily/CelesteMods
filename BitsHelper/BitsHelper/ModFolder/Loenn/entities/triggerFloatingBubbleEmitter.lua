@@ -6,7 +6,9 @@ entity.placements = {
     name = "normal",
     data = {
         flag = "",
-        attach = false
+        attach = false,
+        speedMultiplier = 1.0,
+        noSfx = false
     }
 }
 

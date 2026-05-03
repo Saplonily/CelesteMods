@@ -1,10 +1,10 @@
-﻿using Celeste.Mod.MaxHelpingHand.Entities;
+using Celeste.Mod.MaxHelpingHand.Entities;
 
 namespace Celeste.Mod.BitsHelper.Entities;
 
 public sealed partial class FloatingBubble : Actor
 {
-    private Vector2 speed;
+    private Vector2 velocity;
     private float noFloatTimer;
     private float springCooldownTimer;
     private readonly Sprite sprite;
@@ -12,9 +12,12 @@ public sealed partial class FloatingBubble : Actor
 
     private bool broken = false;
 
-    public FloatingBubble(Vector2 position, Vector2 initialSpeed, bool fromPlayer = false) : base(position)
+    private readonly float speedMultiplier;
+
+    public FloatingBubble(Vector2 position, Vector2 velocity, float speedMultiplier = 1.0f, bool fromPlayer = false) : base(position)
     {
-        speed = initialSpeed;
+        this.velocity = velocity;
+        this.speedMultiplier = speedMultiplier;
         Collider = new Hitbox(14, 14, -7, -7);
         Add(new PlayerCollider(OnPlayer));
         Add(sprite = BitsHelperModule.Instance.SpriteBank.Create("bubble"));
@@ -30,7 +33,7 @@ public sealed partial class FloatingBubble : Actor
     public override void Update()
     {
         base.Update();
-        Vector2 actualSpeed = speed;
+        Vector2 actualSpeed = velocity;
         if (blowingFromPlayer && !CollideCheck<Player>())
             blowingFromPlayer = false;
         if (springCooldownTimer >= 0f)
@@ -38,10 +41,10 @@ public sealed partial class FloatingBubble : Actor
         if (noFloatTimer >= 0f)
             noFloatTimer -= Engine.DeltaTime;
         else
-            actualSpeed += new Vector2(0, -60f);
+            actualSpeed += new Vector2(0, -60f) * speedMultiplier;
         Position += actualSpeed * Engine.DeltaTime;
-        speed.X = Calc.Approach(speed.X, 0, 40f * Engine.DeltaTime);
-        speed.Y = Calc.Approach(speed.Y, -60f, 20f * Engine.DeltaTime);
+        velocity.X = Calc.Approach(velocity.X, 0, 40f * speedMultiplier * Engine.DeltaTime);
+        velocity.Y = Calc.Approach(velocity.Y, -60f * speedMultiplier, 20f * speedMultiplier * Engine.DeltaTime);
         if (CollideCheck<Solid>())
             Burst();
         Rectangle levelBounds = SceneAs<Level>().Bounds;
@@ -61,7 +64,7 @@ public sealed partial class FloatingBubble : Actor
             Vector2 position = Position + new Vector2(0f, 1f) + Calc.AngleToVector(Calc.Random.NextAngle(), 5f);
             SceneAs<Level>().ParticlesFG.Emit(Player.P_CassetteFly, 10, position, new Vector2(8, 8), Color.White, 0);
             SceneAs<Level>().Displacement.AddBurst(Position, 0.6f, 4f, 28f, 0.2f);
-            Audio.Play("event:/BitsHelper/bubblefx/bubble_touch", Position);
+            Audio.Play(BitsHelperSFX.BubbleTouch, Position);
             broken = true;
         }
     }
@@ -70,24 +73,24 @@ public sealed partial class FloatingBubble : Actor
     {
         if (springCooldownTimer > 0)
             return;
-        springCooldownTimer = 0.05f;
+        springCooldownTimer = 0.1f / speedMultiplier;
         switch (spring.Orientation)
         {
         case Spring.Orientations.WallLeft:
             MoveTowardsY(spring.CenterY + 5f, 4f);
-            speed.X = 160f;
-            speed.Y = -80f;
+            velocity.X = 160f * speedMultiplier;
+            velocity.Y = -80f * speedMultiplier;
             noFloatTimer = 0.1f;
             break;
         case Spring.Orientations.WallRight:
             MoveTowardsY(spring.CenterY + 5f, 4f);
-            speed.X = -160f;
-            speed.Y = -80f;
+            velocity.X = -160f * speedMultiplier;
+            velocity.Y = -80f * speedMultiplier;
             noFloatTimer = 0.1f;
             break;
         case Spring.Orientations.Floor:
-            speed.X *= 0.5f;
-            speed.Y = -160f;
+            velocity.X *= 0.5f * speedMultiplier;
+            velocity.Y = -160f * speedMultiplier;
             noFloatTimer = 0.15f;
             springCooldownTimer += 0.2f;
             break;
