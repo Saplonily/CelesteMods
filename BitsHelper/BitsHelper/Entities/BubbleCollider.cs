@@ -1,13 +1,18 @@
-﻿namespace Celeste.Mod.BitsHelper.Entities;
+﻿using Celeste.Mod.BitsHelper.Entities;
+
+namespace Celeste.Mod.BitsHelper;
 
 [Tracked]
-public partial class BubbleCollider : Component
+public sealed partial class BubbleCollider : Component
 {
     private readonly Collider collider;
+    private readonly Action<FloatingBubble> onBubble;
 
-    public BubbleCollider(Collider collider = null) : base(true, false)
+    public BubbleCollider(Action<FloatingBubble> onBubble = null, Collider collider = null)
+        : base(true, false)
     {
         this.collider = collider;
+        this.onBubble = onBubble;
     }
 
     public bool Check(FloatingBubble bubble)
@@ -21,4 +26,7 @@ public partial class BubbleCollider : Component
         Entity.Collider = collider;
         return result;
     }
+
+    public void OnCollide(FloatingBubble bubble)
+        => onBubble(bubble);
 }

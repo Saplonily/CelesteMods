@@ -3,6 +3,19 @@ entities.BitsHelper/TriggerFloatingBubbleEmitter.placements.name.normal=Floating
 entities.BitsHelper/BubbleRefill.placements.name.normal=Bubble Refill
 entities.BitsHelper/FacingToggleSwapBlock.placements.name.normal=Facing Toggle Swap Block
 
+entities.BitsHelper/AlterEgoBlockField.placements.name.in=Alter Ego Block Field (In)
+entities.BitsHelper/AlterEgoBlockField.placements.name.out=Alter Ego Block Field (Out)
+entities.BitsHelper/AlterEgoBlockField.attributes.description.blockIn=Whether to block Alter Ego from switching into the field.
+entities.BitsHelper/AlterEgoBlockField.attributes.description.blockOut=Whether to block Alter Ego from switching out of the field.
+
 triggers.BitsHelper/BubbleEmitterFireTrigger.placements.name.normal=Bubble Emitter Fire Trigger
 triggers.BitsHelper/BubbleEmitterFireTrigger.attributes.description.flag=The flag of the emitters to fire. Will fire every emitter if empty.
 
+triggers.BitsHelper/AlterEgoConfigTrigger.placements.name.normal=Alter Ego Config Trigger
+triggers.BitsHelper/AlterEgoConfigTrigger.attributes.description.holdInteractions=Whether grab each other is allowed.
+triggers.BitsHelper/AlterEgoConfigTrigger.attributes.description.boopInteractions=Whether boop on each other is allowed.
+triggers.BitsHelper/AlterEgoConfigTrigger.attributes.description.simpleMode=Whether it should handle mod inputs.
+triggers.BitsHelper/AlterEgoTrigger.placements.name.normal=Alter Ego Trigger
+triggers.BitsHelper/AlterEgoRemoveTrigger.placements.name.normal=Alter Ego Remove Trigger
+triggers.BitsHelper/AlterEgoRemoveTrigger.attributes.description.flag= If it removes a player, then this flag will be set.
+triggers.BitsHelper/AlterEgoResetTrigger.placements.name.normal=Alter Ego Reset Trigger

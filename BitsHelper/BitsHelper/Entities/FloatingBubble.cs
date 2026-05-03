@@ -2,7 +2,7 @@
 
 namespace Celeste.Mod.BitsHelper.Entities;
 
-public partial class FloatingBubble : Actor
+public sealed partial class FloatingBubble : Actor
 {
     private Vector2 speed;
     private float noFloatTimer;
@@ -53,24 +53,7 @@ public partial class FloatingBubble : Actor
         foreach (BubbleCollider collider in Scene.Tracker.GetComponents<BubbleCollider>())
         {
             if (collider.Check(this))
-            {
-                if (collider.Entity is Spring spring)
-                {
-                    if (springCooldownTimer <= 0)
-                    {
-                        HitSpring(spring);
-                        spring.BounceAnimate();
-                    }
-                }
-                else if (collider.Entity is TouchSwitch)
-                {
-                    (collider.Entity as TouchSwitch).TurnOn();
-                }
-                else if (collider.Entity is FlagTouchSwitch)
-                {
-                    (collider.Entity as FlagTouchSwitch).TurnOn();
-                }
-            }
+                collider.OnCollide(this);
         }
         if (sprite.CurrentAnimationID == "pop" && sprite.CurrentAnimationFrame == 1 && broken == false)
         {
@@ -83,8 +66,10 @@ public partial class FloatingBubble : Actor
         }
     }
 
-    public bool HitSpring(Spring spring)
+    public void OnSpring(Spring spring)
     {
+        if (springCooldownTimer > 0)
+            return;
         springCooldownTimer = 0.05f;
         switch (spring.Orientation)
         {
@@ -107,7 +92,7 @@ public partial class FloatingBubble : Actor
             springCooldownTimer += 0.2f;
             break;
         }
-        return true;
+        spring.BounceAnimate();
     }
 
     public void Burst()

@@ -92,7 +92,7 @@ public sealed class BubbleRefill : Entity
         outline.Visible = false;
         Depth = -100;
         wiggler.Start();
-        Audio.Play("event:/game/general/diamond_return", Position);
+        Audio.Play(SFX.game_gen_diamond_return, Position);
         level.ParticlesFG.Emit(Refill.P_Regen, 16, Position, Vector2.One * 2f);
     }
 
@@ -108,8 +108,11 @@ public sealed class BubbleRefill : Entity
 
     private void OnPlayer(Player player)
     {
-        BitsHelperModule.Session.BlowBubbleCount++;
-        Audio.Play("event:/game/general/diamond_touch", Position);
+        var c = player.Get<BlowBubbleComponent>();
+        if (c is null)
+            player.Add(c = new BlowBubbleComponent());
+        c.OnCollectRefill();
+        Audio.Play(SFX.game_gen_diamond_touch, Position);
         Input.Rumble(RumbleStrength.Medium, RumbleLength.Medium);
         Collidable = false;
         Add(new Coroutine(RefillRoutine(player), true));

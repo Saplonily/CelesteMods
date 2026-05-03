@@ -1,10 +1,10 @@
 ﻿using Celeste.Mod.BitsHelper;
 using Celeste.Mod.Entities;
 
-namespace Celeste.Mod.BitsHelper;
+namespace Celeste.Mod.BitsHelper.Entities;
 
-[CustomEntity("BitsHelper/FacingToggleSwapBlock"), Tracked]
-public partial class FacingToggleSwapBlock : Solid
+[CustomEntity("BitsHelper/FacingToggleSwapBlock")]
+public sealed class FacingToggleSwapBlock : Solid
 {
     private class PathRenderer : Entity
     {
@@ -106,47 +106,12 @@ public partial class FacingToggleSwapBlock : Solid
     {
         base.Awake(scene);
         scene.Add(new PathRenderer(this));
-        var player = scene.Tracker.GetEntity<Player>();
-        if (player is not null)
-            UpdateWithFacing(player.Facing);
     }
-
-    /*
-    private void OnDash(Vector2 _)
-    {
-        Swapping = lerp < 1f;
-        target = 1;
-        returnTimer = ReturnTime;
-        burst = (Scene as Level).Displacement.AddBurst(base.Center, 0.2f, 0f, 16f, 1f, null, null);
-        speed = lerp >= 0.2f ? maxForwardSpeed : MathHelper.Lerp(maxForwardSpeed * 0.333f, maxForwardSpeed, lerp / 0.2f);
-        Audio.Stop(returnSfx, true);
-        Audio.Stop(moveSfx, true);
-        if (!Swapping)
-        {
-            Audio.Play("event:/game/05_mirror_temple/swapblock_move_end", base.Center);
-            return;
-        }
-        moveSfx = Audio.Play("event:/game/05_mirror_temple/swapblock_move", base.Center);
-    }
-    */
 
     public override void Update()
     {
         base.Update();
-        /*
-        if (returnTimer > 0f)
-        {
-            returnTimer -= Engine.DeltaTime;
-            if (returnTimer <= 0f)
-            {
-                target = 0;
-                speed = 0f;
-                returnSfx = Audio.Play("event:/game/05_mirror_temple/swapblock_return", base.Center);
-            }
-        }
-        */
-        if (burst != null)
-            burst.Position = Center;
+        burst?.Position = Center;
 
         redAlpha = Calc.Approach(redAlpha, ((target == 1) ? 0 : 1), Engine.DeltaTime * 32f);
         if (target == 0 && lerp == 0f)
@@ -175,16 +140,14 @@ public partial class FacingToggleSwapBlock : Solid
             MoveTo(Vector2.Lerp(start, end, lerp), vector);
             if (position != Position)
             {
-                //Audio.Position(moveSfx, Center);
-                //Audio.Position(returnSfx, Center);
+
                 if (Position == start && target == 0)
                 {
-                    //Audio.SetParameter(returnSfx, "end", 1f);
-                    Audio.Play("event:/game/05_mirror_temple/swapblock_return_end", Center);
+                    Audio.Play(SFX.game_05_swapblock_return_end, Center);
                 }
                 else if (Position == end && target == 1)
                 {
-                    Audio.Play("event:/game/05_mirror_temple/swapblock_move_end", Center);
+                    Audio.Play(SFX.game_05_swapblock_move_end, Center);
                 }
             }
         }
@@ -193,6 +156,22 @@ public partial class FacingToggleSwapBlock : Solid
         if (lerp is 1f or 0f)
             speed = 0f;
         StopPlayerRunIntoAnimation = lerp is <= 0f or >= 1f;
+
+        var player = Scene.Tracker.GetEntity<Player>();
+        if (player is not null)
+        {
+            Facings facing = player.Facing;
+            if (player.StateMachine.State is Player.StClimb || player.StateMachine.PreviousState is Player.StClimb)
+            {
+                facing = Math.Sign(Input.MoveX.Value) switch
+                {
+                    -1 => Facings.Left,
+                    1 => Facings.Right,
+                    _ => facing
+                };
+            }
+            UpdateWithFacing(facing);
+        }
     }
 
     public void UpdateWithFacing(Facings facing)

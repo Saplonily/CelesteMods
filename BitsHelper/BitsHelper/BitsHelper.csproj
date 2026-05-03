@@ -7,7 +7,6 @@
 		<RootNamespace>Celeste.Mod.$(AssemblyName)</RootNamespace>
 		<LangVersion>preview</LangVersion>
     <ImplicitUsings>true</ImplicitUsings>
-    <ModAssetsCopyType>link</ModAssetsCopyType>
   </PropertyGroup>
 
 	<ItemGroup>

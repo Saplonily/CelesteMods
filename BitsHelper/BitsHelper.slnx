@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path="alterEgo.md" />
   </Folder>
   <Project Path="BitsHelper/BitsHelper.csproj" />
 </Solution>

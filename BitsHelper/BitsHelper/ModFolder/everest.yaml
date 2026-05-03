@@ -1,5 +1,5 @@
 - Name: BitsHelper
-  Version: 0.1.2
+  Version: 0.2.0-dev
   DLL: Code/BitsHelper.dll
   Dependencies:
     - Name: EverestCore
