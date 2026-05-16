@@ -1,6 +1,7 @@
 using System.Reflection;
 using MonoMod;
 using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 
 namespace Celeste.Mod.BetterFreezeFrames;
 
@@ -22,6 +23,8 @@ public partial class BetterFreezeFramesModule : EverestModule
     public readonly static FieldInfo ExtraTimeActiveField =
         typeof(BetterFreezeFramesModule).GetField(nameof(ExtraTimeActive));
 
+    private static readonly DetourConfig detourConfig = new("BetterFreezeFrames", int.MinValue, after: ["*"]);
+
     public override void Load()
     {
         Instance = this;
@@ -42,10 +45,13 @@ public partial class BetterFreezeFramesModule : EverestModule
 
     public static void LoadMain()
     {
-        IL.Monocle.Scene.Begin += Scene_Begin;
-        IL.Monocle.Engine.Update += Engine_Update;
-        VanillaModule.Load();
-        HelpersModule.Load();
+        using (new DetourConfigContext(detourConfig).Use())
+        {
+            IL.Monocle.Scene.Begin += Scene_Begin;
+            IL.Monocle.Engine.Update += Engine_Update;
+            VanillaModule.Load();
+            HelpersModule.Load();
+        }
     }
 
     public static void UnloadMain()
