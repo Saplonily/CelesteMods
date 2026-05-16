@@ -10,7 +10,7 @@ public sealed class AlterEgoController : Entity
     private (int index, Player player) current;
     private bool holdInteractions, boopInteractions;
 
-    public ImmutableArray<VirtualInput> VirtualAxisInputs;
+    internal ImmutableArray<VirtualInput> VirtualAxisInputs;
 
     public AlterEgoController(Player first)
     {
@@ -138,7 +138,7 @@ public sealed class AlterEgoController : Entity
         p.Remove(p.Get<AlterEgoBoopable>());
     }
 
-    private bool TrySwitchToNext()
+    public bool TrySwitchToNext()
     {
         if (alterEgos.Count <= 1)
             return false;
