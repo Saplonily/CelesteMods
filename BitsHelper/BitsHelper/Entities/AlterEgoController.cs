@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace Celeste.Mod.BitsHelper.Entities;
 
 [Tracked]
@@ -8,6 +10,8 @@ public sealed class AlterEgoController : Entity
     private (int index, Player player) current;
     private bool holdInteractions, boopInteractions;
 
+    public ImmutableArray<VirtualInput> VirtualAxisInputs;
+
     public AlterEgoController(Player first)
     {
         original = first;
@@ -15,6 +19,7 @@ public sealed class AlterEgoController : Entity
         alterEgos.Add(first);
         current = (0, first);
         holdInteractions = boopInteractions = false;
+        VirtualAxisInputs = ImmutableArray<VirtualInput>.Empty;
 
         Add(new TransitionListener() { OnOutBegin = OnTransition });
     }
@@ -117,9 +122,17 @@ public sealed class AlterEgoController : Entity
             TrySwitchToNext();
     }
 
+    public override void Added(Scene scene)
+    {
+        base.Added(scene);
+        VirtualAxisInputs = MInput.VirtualInputs.Where(i => i is VirtualAxis or VirtualIntegerAxis).ToImmutableArray();
+    }
+
     public override void Removed(Scene scene)
     {
         base.Removed(scene);
+        VirtualAxisInputs = ImmutableArray<VirtualInput>.Empty;
+
         var p = original;
         p.Remove(p.Get<AlterEgoHoldable>());
         p.Remove(p.Get<AlterEgoBoopable>());

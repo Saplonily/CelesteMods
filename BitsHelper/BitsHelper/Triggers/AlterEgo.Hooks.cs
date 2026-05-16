@@ -85,11 +85,11 @@ public static class AlterEgo
                 // we save all inputs, set to 0, and restore them
                 // luckily at least there's an MInput.Disabled to force all button inputs to return false
 
-                var axisInputsCount = MInput.VirtualInputs.Count(i => i is VirtualAxis or VirtualIntegerAxis);
+                var axisInputsCount = controller.VirtualAxisInputs.Length;
                 Span<int> previousValues = stackalloc int[axisInputsCount];
                 Span<int> previousPreviousValues = stackalloc int[axisInputsCount];
                 int index = 0;
-                foreach (var i in MInput.VirtualInputs)
+                foreach (var i in controller.VirtualAxisInputs)
                 {
                     if (i is VirtualAxis va)
                     {
@@ -123,7 +123,7 @@ public static class AlterEgo
                     Settings.Instance.GrabMode = pGrabMode;
 
                     index = 0;
-                    foreach (var i in MInput.VirtualInputs)
+                    foreach (var i in controller.VirtualAxisInputs)
                     {
                         if (i is VirtualAxis va)
                         {
