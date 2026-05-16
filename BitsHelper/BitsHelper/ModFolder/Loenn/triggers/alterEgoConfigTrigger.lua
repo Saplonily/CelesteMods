@@ -7,7 +7,8 @@ trigger.placements = {
         width = 16,
         height = 16,
         holdInteractions = true,
-        boopInteractions = true
+        boopInteractions = true,
+        keySwitching = true
     }
 }
 

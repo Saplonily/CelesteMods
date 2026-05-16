@@ -12,6 +12,8 @@ public sealed class AlterEgoController : Entity
 
     internal ImmutableArray<VirtualInput> VirtualAxisInputs;
 
+    public bool KeySwitching { get; set; }
+
     public AlterEgoController(Player first)
     {
         original = first;
@@ -116,10 +118,12 @@ public sealed class AlterEgoController : Entity
     public override void Update()
     {
         base.Update();
-
-        var btn = BitsHelperModule.Settings.SwitchBetweenPlayers;
-        if (btn.Pressed)
-            TrySwitchToNext();
+        if (KeySwitching)
+        {
+            var btn = BitsHelperModule.Settings.SwitchBetweenPlayers;
+            if (btn.Pressed)
+                TrySwitchToNext();
+        }
     }
 
     public override void Added(Scene scene)
