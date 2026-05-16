@@ -26,4 +26,9 @@ public sealed class AlterEgoHoldable : Holdable
             holdingPlayer.Position = Calc.Floor(p);
         };
     }
+
+    public override void DebugRender(Camera camera)
+    {
+        Draw.Circle(Entity.Position - new Vector2(8f, 4f), 4f, Color.Red, 4);
+    }
 }

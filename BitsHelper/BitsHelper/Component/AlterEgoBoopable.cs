@@ -17,11 +17,14 @@ public sealed class AlterEgoBoopable : Component
         var m = current.StateMachine;
         if (
             m.State is Player.StNormal &&
-            current.Speed.Y > 0f && current.Bottom <= other.Top + 3f
+            current.Speed.Y > 0f && 
+            current.Bottom <= other.Top + 3f &&
+            current.Holding?.Entity != other &&
+            other.Holding is null
         )
         {
             Dust.Burst(current.BottomCenter, -MathF.PI / 2f, 8);
-            (Scene as Level)?.DirectionalShake(Vector2.UnitY, 0.05f);
+            SceneAs<Level>().DirectionalShake(Vector2.UnitY, 0.05f);
             Input.Rumble(RumbleStrength.Light, RumbleLength.Medium);
             current.Bounce(other.Top + 2f);
             current.Play(SFX.game_gen_thing_booped);
@@ -33,5 +36,10 @@ public sealed class AlterEgoBoopable : Component
         {
             current.Speed.Y = Math.Max(current.Speed.Y, 16f);
         }
+    }
+
+    public override void DebugRender(Camera camera)
+    {
+        Draw.Circle(Entity.Position - new Vector2(8f, 8f), 4f, Color.Blue, 4);
     }
 }

@@ -14,6 +14,8 @@ public static class AlterEgo
         On.Celeste.Player.Update += Player_Update;
         playerOrigUpdateILHook = new(typeof(Player).GetMethod("orig_Update"), Player_orig_Update);
         IL.Celeste.Level.EnforceBounds += Level_EnforceBounds;
+        On.Celeste.Player.NormalUpdate += Player_NormalUpdate;
+
     }
 
     public static void Unload()
@@ -21,6 +23,7 @@ public static class AlterEgo
         On.Celeste.Player.Update -= Player_Update;
         playerOrigUpdateILHook.Dispose();
         IL.Celeste.Level.EnforceBounds -= Level_EnforceBounds;
+        On.Celeste.Player.NormalUpdate -= Player_NormalUpdate;
     }
 
     private static void Player_orig_Update(ILContext il)
@@ -62,6 +65,14 @@ public static class AlterEgo
         return controller.IsOriginal(player) && controller.IsCurrent(player);
     }
 
+    private static int Player_NormalUpdate(On.Celeste.Player.orig_NormalUpdate orig, Player self)
+    {
+        int rv = orig(self);
+        foreach (AlterEgoBoopable comp in self.Scene.Tracker.GetComponents<AlterEgoBoopable>())
+            comp.CheckAndAct(self);
+        return rv;
+    }
+
     private static void Player_Update(On.Celeste.Player.orig_Update orig, Player self)
     {
         var controller = AlterEgoController.Get(self.Scene);
@@ -75,9 +86,6 @@ public static class AlterEgo
             if (controller.IsCurrent(self))
             {
                 orig(self);
-                if (!Input.GrabCheck)
-                    foreach (AlterEgoBoopable comp in self.Scene.Tracker.GetComponents<AlterEgoBoopable>())
-                        comp.CheckAndAct(self);
             }
             else
             {

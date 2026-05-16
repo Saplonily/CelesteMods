@@ -174,11 +174,6 @@ public sealed class AlterEgoController : Entity
             previousPlayer.Add(new AlterEgoHoldable());
             currentPlayer.Remove(currentPlayer.Get<AlterEgoHoldable>());
         }
-        if (boopInteractions)
-        {
-            previousPlayer.Add(new AlterEgoBoopable());
-            currentPlayer.Remove(currentPlayer.Get<AlterEgoBoopable>());
-        }
 
         // makes level.Tracker.GetEntity<Player>() return the current one
         var list = Scene.Tracker.GetEntities<Player>();
@@ -220,8 +215,12 @@ public sealed class AlterEgoController : Entity
         var controller = scene.Tracker.GetEntity<AlterEgoController>();
         if (controller is null)
         {
-            controller = new(player);
-            scene.Add(controller);
+            controller = scene.Entities.ToAdd.OfType<AlterEgoController>().SingleOrDefault();
+            if (controller is null)
+            {
+                controller = new(player);
+                scene.Add(controller);
+            }
         }
         return controller;
     }
