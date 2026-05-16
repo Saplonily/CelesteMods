@@ -1,5 +1,5 @@
 - Name: BetterFreezeFrames
-  Version: 0.3.4
+  Version: 0.3.5
   DLL: Code/BetterFreezeFrames.dll
   Dependencies:
     - Name: EverestCore
