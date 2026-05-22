@@ -30,6 +30,7 @@ public static class VanillaModule
             orig(self);
     }
 
+    // TODO optimize
     public static bool IsSafeToUpdate(Entity entity)
         => entity is ParticleSystem
                   or SpeedRing

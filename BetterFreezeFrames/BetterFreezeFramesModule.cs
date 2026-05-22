@@ -130,6 +130,7 @@ public partial class BetterFreezeFramesModule : EverestModule
 
     private static void FreezeUpdate(Scene scene)
     {
+        // TODO optimize
         // we need a better check method
         static bool IsSafeToUpdate(Entity entity)
             => VanillaModule.IsSafeToUpdate(entity) || HelpersModule.IsSafeToUpdate(entity);
@@ -142,27 +143,6 @@ public partial class BetterFreezeFramesModule : EverestModule
                 entity.Update();
                 continue;
             }
-            switch (entity)
-            {
-            case Refill refill:
-            {
-                float orig = refill.respawnTimer;
-                refill.respawnTimer = float.PositiveInfinity;
-                refill.Update();
-                refill.respawnTimer = orig;
-                break;
-            }
-            case DreamBlock dreamBlock:
-            {
-                BaseDreamBlockUpdate(dreamBlock);
-                break;
-            }
-            case Water water:
-            {
-                BaseWaterUpdate(water);
-                break;
-            }
-            }
         }
         if (scene is Level level)
         {
@@ -174,10 +154,4 @@ public partial class BetterFreezeFramesModule : EverestModule
 
     public static bool OnExtraInterval(Scene _, float interval)
         => (int)((ExtraTimeActive - (double)Engine.DeltaTime) / (double)interval) < (int)(ExtraTimeActive / (double)interval);
-
-    [MonoModLinkTo("Celeste.DreamBlock", "System.Void Update()"), MonoModForceCall]
-    public static void BaseDreamBlockUpdate(DreamBlock dreamBlock) { throw null; }
-
-    [MonoModLinkTo("Celeste.Water", "System.Void Update()"), MonoModForceCall]
-    public static void BaseWaterUpdate(Water water) { throw null; }
 }
