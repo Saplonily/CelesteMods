@@ -7,6 +7,9 @@ namespace Celeste.Mod.BitsHelper;
 
 public static class AlterEgo
 {
+    private static readonly Dictionary<VirtualButton, bool> dummyDictBool = new();
+    private static readonly Dictionary<VirtualButton, float> dummyDictSingle = new();
+
     private static ILHook playerOrigUpdateILHook;
 
     public static void Load()
@@ -83,6 +86,12 @@ public static class AlterEgo
         }
         else
         {
+            var prevBool = PandorasBox.CloneSpawner.ConsumedPresses;
+            var prevSingle = PandorasBox.CloneSpawner.BufferCounters;
+
+            PandorasBox.CloneSpawner.ConsumedPresses = dummyDictBool;
+            PandorasBox.CloneSpawner.BufferCounters = dummyDictSingle;
+
             if (controller.IsCurrent(self))
             {
                 orig(self);
@@ -103,8 +112,8 @@ public static class AlterEgo
                     {
                         previousValues[index] = Unsafe.BitCast<float, int>(va.Value);
                         previousPreviousValues[index] = Unsafe.BitCast<float, int>(va.PreviousValue);
-                        SetVirtualAxisValue(va, 0f);
-                        SetVirtualAxisPreviousValue(va, 0f);
+                        va.Value = 0f;
+                        va.PreviousValue = 0f;
                         index++;
                     }
                     else if (i is VirtualIntegerAxis via)
@@ -135,8 +144,8 @@ public static class AlterEgo
                     {
                         if (i is VirtualAxis va)
                         {
-                            SetVirtualAxisValue(va, Unsafe.BitCast<int, float>(previousValues[index]));
-                            SetVirtualAxisPreviousValue(va, Unsafe.BitCast<int, float>(previousPreviousValues[index]));
+                            va.Value = Unsafe.BitCast<int, float>(previousValues[index]);
+                            va.PreviousValue = Unsafe.BitCast<int, float>(previousPreviousValues[index]);
                             index++;
                         }
 
@@ -148,16 +157,10 @@ public static class AlterEgo
                         }
                     }
                 }
-
-                // why publicizer didn't publicize Monocle
-
-                [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "set_Value")]
-                static extern void SetVirtualAxisValue(VirtualAxis va, float value);
-
-                [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "set_PreviousValue")]
-                static extern void SetVirtualAxisPreviousValue(VirtualAxis va, float value);
             }
+
+            PandorasBox.CloneSpawner.ConsumedPresses = prevBool;
+            PandorasBox.CloneSpawner.BufferCounters = prevSingle;
         }
     }
-
 }
