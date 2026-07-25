@@ -13,7 +13,7 @@ public sealed class BitsHelperModule : EverestModule
 
     public static BitsHelperSettings Settings => (BitsHelperSettings)Instance._Settings;
 
-    private static readonly DetourConfig DetourConfig = new("BitsHelper", -32);
+    private static readonly DetourConfig DetourConfig = new("BitsHelper", 32);
 
     public override void Load()
     {
