@@ -4,7 +4,9 @@
 
 ### AlterEgoTrigger
 
-在节点位置产生*另一个你*, 按下 Mod 的 `Switch Between Players` 按键(默认 Tab)以切换到*另一个你*
+在节点位置产生*另一个你*, 按下 Mod 的 `Switch Between Players` 按键(默认 Tab)以切换到*另一个你*  
+默认情况下按键切换不开启, 需要使用 `AlterEgoConfigTrigger` 并设置开启 `keySwitching`  
+目前的切换只支持顺序轮换, 可能未来会新增 tag 类似的东西?
 
 - `visualMode`: 视觉模式
 	- `SameAsPlayer`: 与玩家相同
@@ -24,6 +26,7 @@
 
 - `holdInteractions`: 是否允许玩家间抓取交互
 - `boopInteractions`: 是否允许玩家间踩头交互
+- `keySwitching`: 是否允许按键切换玩家
 
 两种交互默认关闭
 
@@ -57,7 +60,9 @@
 
 ### AlterEgoTrigger
 
-Spawns *another you* at the node position, press the Mod's `Switch Between Players` key (default to **Tab**) to switch to *another you*
+Spawns *another you* at the node position, press the Mod's `Switch Between Players` key (default to **Tab**) to switch to *another you*  
+By default, the key switching is disabled, you need to use `AlterEgoConfigTrigger` and enable `keySwitching`.  
+Currently the switching only supports sequential rotation, and tag-like features may be added in the future.
 
 - `visualMode`: Visual mode
 	- `SameAsPlayer`: Same as player
@@ -77,6 +82,7 @@ The original player will not be removed.
 
 - `holdInteractions`: Whether to allow grab interactions
 - `boopInteractions`: Whether to allow boop interactions
+- `keySwitching`: Whether to allow key switching between players
 
 These two interactions are disabled by default
 

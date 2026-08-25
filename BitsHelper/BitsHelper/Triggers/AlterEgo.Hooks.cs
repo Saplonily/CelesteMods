@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Celeste.Mod.BitsHelper.Entities;
 using MonoMod.Cil;
@@ -7,24 +8,29 @@ namespace Celeste.Mod.BitsHelper;
 
 public static class AlterEgo
 {
-    private static readonly Dictionary<VirtualButton, bool> dummyDictBool = new();
-    private static readonly Dictionary<VirtualButton, float> dummyDictSingle = new();
-
     private static ILHook playerOrigUpdateILHook;
+    private static ILHook pandorasBoxUpdateILHook;
 
     public static void Load()
     {
         On.Celeste.Player.Update += Player_Update;
-        playerOrigUpdateILHook = new(typeof(Player).GetMethod("orig_Update"), Player_orig_Update);
+        playerOrigUpdateILHook = new(
+            typeof(Player).GetMethod("orig_Update"),
+            Player_orig_Update
+        );
         IL.Celeste.Level.EnforceBounds += Level_EnforceBounds;
         On.Celeste.Player.NormalUpdate += Player_NormalUpdate;
-
+        pandorasBoxUpdateILHook = new(
+            typeof(PandorasBox.CloneSpawner).GetMethod("Player_Update", BindingFlags.NonPublic | BindingFlags.Static),
+            PandorasBoxCloneSpawner_Update
+        );
     }
 
     public static void Unload()
     {
         On.Celeste.Player.Update -= Player_Update;
         playerOrigUpdateILHook.Dispose();
+        pandorasBoxUpdateILHook.Dispose();
         IL.Celeste.Level.EnforceBounds -= Level_EnforceBounds;
         On.Celeste.Player.NormalUpdate -= Player_NormalUpdate;
     }
@@ -39,6 +45,26 @@ public static class AlterEgo
         cur.EmitLdarg0();
         cur.EmitDelegate(IsCurrent);
         cur.EmitAnd();
+    }
+
+    private static void PandorasBoxCloneSpawner_Update(ILContext il)
+    {
+        ILCursor cur = new(il);
+
+        var label = cur.DefineLabel();
+
+        cur.EmitLdarg1();
+        cur.EmitDelegate(IsControllerPresent);
+        cur.EmitBrfalse(label);
+        cur.EmitLdarg0();
+        cur.EmitLdarg1();
+        cur.EmitCallvirt(typeof(On.Celeste.Player.orig_Update).GetMethod("Invoke"));
+        cur.EmitRet();
+
+        cur.MarkLabel(label);
+
+        static bool IsControllerPresent(Player player)
+            => AlterEgoController.Get(player.Scene) is not null;
     }
 
     private static void Level_EnforceBounds(ILContext il)
@@ -86,12 +112,6 @@ public static class AlterEgo
         }
         else
         {
-            var prevBool = PandorasBox.CloneSpawner.ConsumedPresses;
-            var prevSingle = PandorasBox.CloneSpawner.BufferCounters;
-
-            PandorasBox.CloneSpawner.ConsumedPresses = dummyDictBool;
-            PandorasBox.CloneSpawner.BufferCounters = dummyDictSingle;
-
             if (controller.IsCurrent(self))
             {
                 orig(self);
@@ -158,9 +178,6 @@ public static class AlterEgo
                     }
                 }
             }
-
-            PandorasBox.CloneSpawner.ConsumedPresses = prevBool;
-            PandorasBox.CloneSpawner.BufferCounters = prevSingle;
         }
     }
 }
