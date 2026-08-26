@@ -2,6 +2,7 @@ entities.BitsHelper/TimerFloatingBubbleEmitter.placements.name.normal=Floating B
 entities.BitsHelper/TriggerFloatingBubbleEmitter.placements.name.normal=Floating Bubble Emitter (Trigger)
 entities.BitsHelper/BubbleRefill.placements.name.normal=Bubble Refill
 entities.BitsHelper/FacingToggleSwapBlock.placements.name.normal=Facing Toggle Swap Block
+entities.BitsHelper/StaticBubble.placements.name.normal=Static Bubble
 
 entities.BitsHelper/AlterEgoBlockField.placements.name.in=Alter Ego Block Field (In)
 entities.BitsHelper/AlterEgoBlockField.placements.name.out=Alter Ego Block Field (Out)

@@ -1,4 +1,4 @@
-﻿<Sprites>
+<Sprites>
   
   <bubbleEmitter path="objects/BitsHelper/bubbleEmitter/" start="idle">
     <Loop id="idle" path="close" delay="0.1" frames="3"/>
@@ -10,6 +10,8 @@
     <Anim id="appear" path="appear" delay="0.1" frames="0-2" goto="idle"/>
     <Loop id="idle" path="idle" delay="0.1" frames="0"/>
     <Anim id="pop" path="pop" delay="0.01" frames="0-4"/>
+    <Loop id="static_idle" path="static_idle" delay="0.1" frames="0-4"/>
+		<Anim id="respawn" path="appear" delay="0.1" frames="0-2" goto="static_idle"/>
   </bubble>
 
   <facingToggleSwapBlockLight path="objects/swapblock/moon/" start="idle">

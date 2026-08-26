@@ -1,8 +1,6 @@
-using Celeste.Mod.MaxHelpingHand.Entities;
-
 namespace Celeste.Mod.BitsHelper.Entities;
 
-public sealed partial class FloatingBubble : Actor
+public sealed class FloatingBubble : Actor
 {
     private Vector2 velocity;
     private float noFloatTimer;
